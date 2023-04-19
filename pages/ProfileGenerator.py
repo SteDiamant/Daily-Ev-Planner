@@ -362,7 +362,7 @@ def plot_miltiple(days,day_start,day_end):
         for i in range(day_start, day_end):
             day_data = get_day_data(days, i)
             merged_data = pd.concat([merged_data, day_data])
-        merged_data.to_csv('days.csv')
+        #merged_data.to_csv('days.csv')
         return(merged_data)
 
 def convert_df(df):
