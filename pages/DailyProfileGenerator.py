@@ -57,8 +57,8 @@ class MergeProfiles:
         merged_df.fillna(0, inplace=True)
         merged_df.drop_duplicates(inplace=True)
         
-        merged_df['TotalImbalance']=merged_df['Imbalance (W)']+merged_df['EV1_charge (W)']+merged_df['EV2_charge (W)']+merged_df['EV3_charge (W)']+merged_df['EV4_charge (W)']
         merged_df['Total_EV_Charge (W)']=merged_df['EV1_charge (W)']+merged_df['EV2_charge (W)']+merged_df['EV3_charge (W)']+merged_df['EV4_charge (W)']
+        merged_df['TotalImbalance']=merged_df['Imbalance (W)']+merged_df['Total_EV_Charge (W)']
         return merged_df
     
     def merge_discharge_profile(df,discharge_profile):
@@ -66,8 +66,8 @@ class MergeProfiles:
         merged_df.fillna(0, inplace=True)
         merged_df.drop_duplicates(inplace=True)
         
-        merged_df['TotalImbalance']=merged_df['Imbalance (W)']+merged_df['EV1_charge (W)']+merged_df['EV2_charge (W)']+merged_df['EV3_charge (W)']+merged_df['EV4_charge (W)']
-        merged_df['Total_EV_Charge (W)']=merged_df['EV1_charge (W)']+merged_df['EV2_charge (W)']+merged_df['EV3_charge (W)']+merged_df['EV4_charge (W)']
+        merged_df['TotalImbalance']=merged_df['Imbalance (W)']+merged_df['EV1_discharge (W)']+merged_df['EV2_discharge (W)']+merged_df['EV3_discharge (W)']+merged_df['EV4_discharge (W)']
+        merged_df['Total_EV_DisCharge (W)']=merged_df['EV1_discharge (W)']+merged_df['EV2_discharge (W)']+merged_df['EV3_discharge (W)']+merged_df['EV4_discharge (W)']
         return merged_df
     
 
@@ -129,22 +129,23 @@ def calculateTotalEnergy_EV_Charge(df):
 def count_positive_charge_negative_imbalance(df):
     count=0
     count1=0
-    count += len(df[(df['EV1_charge (W)'] > 0) & (df['TotalImbalance'] < 0)])
-    count += len(df[(df['EV2_charge (W)'] > 0) & (df['TotalImbalance'] < 0)])
-    count += len(df[(df['EV3_charge (W)'] > 0) & (df['TotalImbalance'] < 0)])
-    count += len(df[(df['EV4_charge (W)'] > 0) & (df['TotalImbalance'] < 0)])
-    count1 += len(df[(df['EV1_charge (W)'] > 0) & (df['TotalImbalance'] > 0)])
-    count1 += len(df[(df['EV2_charge (W)'] > 0) & (df['TotalImbalance'] > 0)])
-    count1 += len(df[(df['EV3_charge (W)'] > 0) & (df['TotalImbalance'] > 0)])
-    count1 += len(df[(df['EV4_charge (W)'] > 0) & (df['TotalImbalance'] > 0)])
-    total_count=len(df['EV1_charge (W)']>0)
-
+    df['CheckColumn']=df['TotalImbalance']+df['EV1_charge (W)']+df['EV2_charge (W)']+df['EV3_charge (W)']+df['EV4_charge (W)']
+    count += len(df[(df['EV1_charge (W)'] > 0) & (df['TotalImbalance'] <= 0)])
+    count += len(df[(df['EV2_charge (W)'] > 0) & (df['TotalImbalance'] <= 0)])
+    count += len(df[(df['EV3_charge (W)'] > 0) & (df['TotalImbalance'] <= 0)])
+    count += len(df[(df['EV4_charge (W)'] > 0) & (df['TotalImbalance'] <= 0)])
+    count1 += len(df[(df['EV1_charge (W)'] > 0) & (df['TotalImbalance'] >= 0)])
+    count1 += len(df[(df['EV2_charge (W)'] > 0) & (df['TotalImbalance'] >= 0)])
+    count1 += len(df[(df['EV3_charge (W)'] > 0) & (df['TotalImbalance'] >= 0)])
+    count1 += len(df[(df['EV4_charge (W)'] > 0) & (df['TotalImbalance'] >= 0)])
+    total_count=len(df['TotalImbalance']>0)
+    
 
     
-    return count,count1 ,total_count, [len(df[(df['EV1_charge (W)'] > 0) & (df['TotalImbalance'] < 0)]),
-                                len(df[(df['EV2_charge (W)'] > 0) & (df['TotalImbalance'] < 0)]),
-                                len(df[(df['EV3_charge (W)'] > 0) & (df['TotalImbalance'] < 0)]),
-                                len(df[(df['EV4_charge (W)'] > 0) & (df['TotalImbalance'] < 0)])]
+    return count,count1 ,total_count, [len(df[(df['EV1_charge (W)'] > 0) & (df['TotalImbalance'] <= 0)]),
+                                       len(df[(df['EV2_charge (W)'] > 0) & (df['TotalImbalance'] <= 0)]),
+                                       len(df[(df['EV3_charge (W)'] > 0) & (df['TotalImbalance'] <= 0)]),
+                                       len(df[(df['EV4_charge (W)'] > 0) & (df['TotalImbalance'] <= 0)])]
   
 
 def create_day_discharge_profile(day, start_discharge_times, end_discharge_times,SCALE_FACTORS):
@@ -252,12 +253,13 @@ def main():
     end_date = start_date  # set end date equal to start date
 
 
-
+    
     merged_df = create_day_charge_profile(day, [start_charge_time1, start_charge_time2, start_charge_time3, start_charge_time4],
                                                 [end_charge_time1, end_charge_time2, end_charge_time3, end_charge_time4],[SCALE_FACTOR1_CHARGE,SCALE_FUCTOR2_CHARGE,SCALE_FUCTOR3_CHARGE,SCALE_FUCTOR4_CHARGE])
-
+    
     merged_df1 = create_day_discharge_profile(day, [start_discharge_time1, start_discharge_time2, start_discharge_time3, start_discharge_time4],
                                                     [end_discharge_time1, end_discharge_time2, end_discharge_time3, end_discharge_time4],[SCALE_FACTOR1_DISHCARGE,SCALE_FUCTOR2_DISCHARGE,SCALE_FUCTOR3_DISCHARGE,SCALE_FUCTOR4_DISCHARGE])
+    
     #st.write(merged_df1,merged_df)
     final_profile=merged_df.add(merged_df1)
     total_charge,per_car_charge_list=calculateTotalEnergy_EV_Charge(merged_df)
@@ -265,12 +267,13 @@ def main():
     with st.container():
         fig, ax = plt.subplots(figsize=(10, 4))
         # Create a line plot
-        sns.lineplot(data=final_profile[['EV1_charge (W)', 'EV2_charge (W)', 'EV3_charge (W)', 'EV4_charge (W)', 'Total_EV_Charge (W)','TotalImbalance','Imbalance (W)']])
+        sns.lineplot(data=final_profile[['PV (W)','EV1_charge (W)', 'EV2_charge (W)', 'EV3_charge (W)', 'EV4_charge (W)', 'Total_EV_Charge (W)','TotalImbalance','Imbalance (W)']])
         # Set plot title and axis labels
         plt.title('Electric Vehicle Charging')
         plt.xlabel('Time')
         plt.ylabel('Charge (W)')
         ax.set_xticklabels(ax.get_xticklabels(), rotation=45)
+        plt.legend(loc='lower left')
         st.pyplot(fig)
     with st.container():
         col1,col2,col3=st.columns([2,1,0.9])
@@ -293,6 +296,7 @@ def main():
             plt.ylabel('Energy (Wh)')
             plt.title('Total Energy')
             st.pyplot(fig2)
+            st
             good_energy_count,bad_energy_count,total_EV_demand_count,per_car_count_list=count_positive_charge_negative_imbalance(merged_df)
         with col3:
             st.pyplot(plot_pie_chart(["PVs","From Grid"],[good_energy_count,bad_energy_count]))
