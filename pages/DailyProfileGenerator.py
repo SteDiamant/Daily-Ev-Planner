@@ -5,7 +5,7 @@ import matplotlib.pyplot as plt
 import streamlit as st
 import seaborn as sns
 DAY=223
-
+SCALE_FACTOR=5
 
 def split_dataframe_by_day(df):
         days = [df[i:i+96] for i in range(0, len(df), 96)]
@@ -13,7 +13,7 @@ def split_dataframe_by_day(df):
 
 
 def ETL():
-    df = pd.read_csv('data_original.csv')
+    df = pd.read_csv('../data_original.csv')
     df['Time'] = pd.to_datetime(df['Time'])
     df['Month'] = df['Time'].dt.month
     df['DayOfMonth'] = df['Time'].dt.day
@@ -34,10 +34,10 @@ def ETL():
 
 
 class ProfileGenerator:
-    def crete_charge_profile(df,start_time,end_time,start_date,end_date,id):
+    def crete_charge_profile(df,start_time,end_time,start_date,end_date,id,scale_factor) :
         date_range = pd.date_range(start=datetime.combine(start_date, start_time), end=datetime.combine(end_date, end_time), freq='15min')
         charge_profile = pd.DataFrame(index=date_range)
-        charge_profile[f'EV{id}_charge (W)'] = pd.Series(data=np.random.randint(low=6400, high=7000, size=len(date_range)), index=charge_profile.index)
+        charge_profile[f'EV{id}_charge (W)'] = pd.Series(data=scale_factor*np.random.randint(low=6400, high=7000, size=len(date_range)), index=charge_profile.index)
         charge_profile.index.name = 'Time'
         
         return charge_profile
@@ -49,6 +49,8 @@ class ProfileGenerator:
         discharge_profile.index.name = 'Time'
         
         return discharge_profile
+
+
 class MergeProfiles:
     def merge_charge_profile(df,charge_profile):
         merged_df = pd.concat([charge_profile.set_index('Time'), df.set_index('Time')], axis=1)
@@ -69,7 +71,7 @@ class MergeProfiles:
         return merged_df
     
 
-def create_day_charge_profile(day, start_charge_times, end_charge_times):
+def create_day_charge_profile(day, start_charge_times, end_charge_times,SCALE_FACTORS_CHARGE):
     # Get unique month and day values from the 'day' dataframe
     __get__month = int(day['Month'].unique()[0])  # use index 0 to get the first (and only) element
     __get__day = int(day['DayOfMonth'].unique()[0])
@@ -79,10 +81,10 @@ def create_day_charge_profile(day, start_charge_times, end_charge_times):
     end_date = start_date  # set end date equal to start date
 
     # Create charge profiles for all four EVs
-    ev1 = ProfileGenerator.crete_charge_profile(day, start_charge_times[0], end_charge_times[0], start_date, end_date, id=1)
-    ev2 = ProfileGenerator.crete_charge_profile(day, start_charge_times[1], end_charge_times[1], start_date, end_date, id=2)
-    ev3 = ProfileGenerator.crete_charge_profile(day, start_charge_times[2], end_charge_times[2], start_date, end_date, id=3)
-    ev4 = ProfileGenerator.crete_charge_profile(day, start_charge_times[3], end_charge_times[3], start_date, end_date, id=4)
+    ev1 = ProfileGenerator.crete_charge_profile(day, start_charge_times[0], end_charge_times[0], start_date, end_date, id=1, scale_factor=SCALE_FACTORS_CHARGE[0])
+    ev2 = ProfileGenerator.crete_charge_profile(day, start_charge_times[1], end_charge_times[1], start_date, end_date, id=2, scale_factor=SCALE_FACTORS_CHARGE[1])
+    ev3 = ProfileGenerator.crete_charge_profile(day, start_charge_times[2], end_charge_times[2], start_date, end_date, id=3, scale_factor=SCALE_FACTORS_CHARGE[2])
+    ev4 = ProfileGenerator.crete_charge_profile(day, start_charge_times[3], end_charge_times[3], start_date, end_date, id=4, scale_factor=SCALE_FACTORS_CHARGE[3])
 
     # Merge the charge profiles into a single dataframe
     charge_data = pd.concat([ev1, ev2, ev3, ev4], axis=1)
@@ -93,7 +95,7 @@ def create_day_charge_profile(day, start_charge_times, end_charge_times):
     merged_df = MergeProfiles.merge_charge_profile(day, charge_data)
     
     return merged_df
-def create_day_discharge_profile(day, start_charge_times, end_charge_times):
+def create_day_discharge_profile(day, start_charge_times, end_charge_times,SCALE_FACTORS):
     # Get unique month and day values from the 'day' dataframe
     __get__month = int(day['Month'].unique()[0])  # use index 0 to get the first (and only) element
     __get__day = int(day['DayOfMonth'].unique()[0])
@@ -103,10 +105,10 @@ def create_day_discharge_profile(day, start_charge_times, end_charge_times):
     end_date = start_date  # set end date equal to start date
 
     # Create charge profiles for all four EVs
-    ev1 = ProfileGenerator.crete_charge_profile(day, start_charge_times[0], end_charge_times[0], start_date, end_date, id=1)
-    ev2 = ProfileGenerator.crete_charge_profile(day, start_charge_times[1], end_charge_times[1], start_date, end_date, id=2)
-    ev3 = ProfileGenerator.crete_charge_profile(day, start_charge_times[2], end_charge_times[2], start_date, end_date, id=3)
-    ev4 = ProfileGenerator.crete_charge_profile(day, start_charge_times[3], end_charge_times[3], start_date, end_date, id=4)
+    ev1 = ProfileGenerator.crete_charge_profile(day, start_charge_times[0], end_charge_times[0], start_date, end_date, id=1,scale_factor=SCALE_FACTORS[0])
+    ev2 = ProfileGenerator.crete_charge_profile(day, start_charge_times[1], end_charge_times[1], start_date, end_date, id=2,scale_factor=SCALE_FACTORS[1])
+    ev3 = ProfileGenerator.crete_charge_profile(day, start_charge_times[2], end_charge_times[2], start_date, end_date, id=3,scale_factor=SCALE_FACTORS[2])
+    ev4 = ProfileGenerator.crete_charge_profile(day, start_charge_times[3], end_charge_times[3], start_date, end_date, id=4,scale_factor=SCALE_FACTORS[3])
 
     # Merge the charge profiles into a single dataframe
     charge_data = pd.concat([ev1, ev2, ev3, ev4], axis=1)
@@ -145,7 +147,7 @@ def count_positive_charge_negative_imbalance(df):
                                 len(df[(df['EV4_charge (W)'] > 0) & (df['TotalImbalance'] < 0)])]
   
 
-def create_day_discharge_profile(day, start_discharge_times, end_discharge_times):
+def create_day_discharge_profile(day, start_discharge_times, end_discharge_times,SCALE_FACTORS):
     # Get unique month and day values from the 'day' dataframe
     __get__month = int(day['Month'].unique()[0])  # use index 0 to get the first (and only) element
     __get__day = int(day['DayOfMonth'].unique()[0])
@@ -182,58 +184,65 @@ def plot_pie_chart(labels, values):
 def main():
     days=ETL()
     day=days[DAY]
-    car1,car2,car3,car4=st.columns(4)
-    with car1:
-        st.title('EV1')
-        ch1,dis1=st.columns(2)
-        with ch1:
-            with st.expander('EV1 Charge'):
-                start_charge_time1 = st.time_input('start charge time 1',value=time(hour=9, minute=30),key='start_charge_time1')
-                end_charge_time1 = st.time_input('end charge time 1',value=time(hour=15, minute=45),key='end_charge_time1')
-                
-        with dis1:
-            with st.expander('EV1 DisCharge'):
-                start_discharge_time1 = st.time_input('start discahrge time 1',value=time(hour=17, minute=0),key='start_discharge_time1')
-                end_discharge_time1 = st.time_input('end discharge time 1',value=time(hour=22, minute=45),key='end_discharge_time1')
-    with car2:
-        st.title('EV2')
-        ch2,dis2=st.columns(2)
-        with ch2:
-            with st.expander('EV2 Charge'):
-                start_charge_time2 = st.time_input('start charge time 2',value=time(hour=8, minute=30))
-                end_charge_time2 = st.time_input('end charge time 2',value=time(hour=18, minute=0))
-                
-        with dis2:
-            with st.expander('EV2 DisCharge'):
-                start_discharge_time2 = st.time_input('start discahrge time 2',value=time(hour=19, minute=0))
-                end_discharge_time2 = st.time_input('end discharge time 2',value=time(hour=19, minute=30))
-    
-    with car3:
-        st.title('EV3')
-        ch3,dis3=st.columns(2)
-        with ch3:
-            with st.expander('EV3 Charge'):
-                start_charge_time3= st.time_input('start charge time 3',value=time(hour=9, minute=30))
-                end_charge_time3 = st.time_input('end charge time 3',value=time(hour=15, minute=30))
-                
-        with dis3:
-            with st.expander('EV3 DisCharge'):
-                start_discharge_time3 = st.time_input('start discahrge time 3',value=time(hour=17, minute=0))
-                end_discharge_time3 = st.time_input('end discharge time 3',value=time(hour=22, minute=15))
-    with car4:
-        st.title('EV4')
-        ch4,dis4=st.columns(2)
-        with ch4:
-            with st.expander('EV4 Charge'):
-                start_charge_time4 = st.time_input('start charge time 4',value=time(hour=8, minute=15))
-                end_charge_time4 = st.time_input('end charge time 4',value=time(hour=17, minute=45))
-                
-        with dis4:
-            with st.expander('EV4 DisCharge'):
-                start_discharge_time4 = st.time_input('start discahrge time 4',value=time(hour=18, minute=0))
-                end_discharge_time4 = st.time_input('end discharge time 4',value=time(hour=21, minute=0))
-
-
+    with st.form("my_form"):
+        car1,car2,car3,car4=st.columns(4)
+        with car1:
+            st.title('EV1')
+            ch1,dis1=st.columns(2)
+            with ch1:
+                with st.expander('EV1 Charge'):
+                    start_charge_time1 = st.time_input('start charge time 1',value=time(hour=9, minute=30),key='start_charge_time1')
+                    end_charge_time1 = st.time_input('end charge time 1',value=time(hour=15, minute=45),key='end_charge_time1')
+                    SCALE_FACTOR1_CHARGE=st.slider('EV1 charge multiplier',min_value=0.0,max_value=5.0,value=1.0,step=0.1)
+                    
+            with dis1:
+                with st.expander('EV1 DisCharge'):
+                    start_discharge_time1 = st.time_input('start discahrge time 1',value=time(hour=17, minute=0),key='start_discharge_time1')
+                    end_discharge_time1 = st.time_input('end discharge time 1',value=time(hour=22, minute=45),key='end_discharge_time1')
+                    SCALE_FACTOR1_DISHCARGE=st.slider('EV1 discharge multiplier',min_value=0.0,max_value=5.0,value=1.0,step=0.1)
+        with car2:
+            st.title('EV2')
+            ch2,dis2=st.columns(2)
+            with ch2:
+                with st.expander('EV2 Charge'):
+                    start_charge_time2 = st.time_input('start charge time 2',value=time(hour=8, minute=30))
+                    end_charge_time2 = st.time_input('end charge time 2',value=time(hour=18, minute=0))
+                    SCALE_FUCTOR2_CHARGE=st.slider('EV2 charge multiplier',min_value=0.0,max_value=5.0,value=1.0,step=0.1)
+                    
+            with dis2:
+                with st.expander('EV2 DisCharge'):
+                    start_discharge_time2 = st.time_input('start discahrge time 2',value=time(hour=19, minute=0))
+                    end_discharge_time2 = st.time_input('end discharge time 2',value=time(hour=19, minute=30))
+                    SCALE_FUCTOR2_DISCHARGE=st.slider('EV2 discharge multiplier',min_value=0.0,max_value=5.0,value=1.0,step=0.1)
+        
+        with car3:
+            st.title('EV3')
+            ch3,dis3=st.columns(2)
+            with ch3:
+                with st.expander('EV3 Charge'):
+                    start_charge_time3= st.time_input('start charge time 3',value=time(hour=9, minute=30))
+                    end_charge_time3 = st.time_input('end charge time 3',value=time(hour=15, minute=30))
+                    SCALE_FUCTOR3_CHARGE=st.slider('EV3 charge multiplier',min_value=0.0,max_value=5.0,value=1.0,step=0.1)
+                    
+            with dis3:
+                with st.expander('EV3 DisCharge'):
+                    start_discharge_time3 = st.time_input('start discahrge time 3',value=time(hour=17, minute=0))
+                    end_discharge_time3 = st.time_input('end discharge time 3',value=time(hour=22, minute=15))
+                    SCALE_FUCTOR3_DISCHARGE=st.slider('EV3 discharge multiplier',min_value=0.0,max_value=5.0,value=1.0,step=0.1)
+        with car4:
+            st.title('EV4')
+            ch4,dis4=st.columns(2)
+            with ch4:
+                with st.expander('EV4 Charge'):
+                    start_charge_time4 = st.time_input('start charge time 4',value=time(hour=8, minute=15))
+                    end_charge_time4 = st.time_input('end charge time 4',value=time(hour=17, minute=45))
+                    SCALE_FUCTOR4_CHARGE=st.slider('EV4 charge multiplier',min_value=0.0,max_value=5.0,value=1.0,step=0.1)
+            with dis4:
+                with st.expander('EV4 DisCharge'):
+                    start_discharge_time4 = st.time_input('start discahrge time 4',value=time(hour=18, minute=0))
+                    end_discharge_time4 = st.time_input('end discharge time 4',value=time(hour=21, minute=0))
+                    SCALE_FUCTOR4_DISCHARGE=st.slider('EV4 discharge multiplier',min_value=0.0,max_value=5.0,value=1.0,step=0.1)
+        submitted = st.form_submit_button("Submit")
     # Get unique month and day values from the 'day' dataframe
     __get__month = int(day['Month'].unique()[0])  # use index 0 to get the first (and only) element
     __get__day = int(day['DayOfMonth'].unique()[0])
@@ -245,10 +254,10 @@ def main():
 
 
     merged_df = create_day_charge_profile(day, [start_charge_time1, start_charge_time2, start_charge_time3, start_charge_time4],
-                                                [end_charge_time1, end_charge_time2, end_charge_time3, end_charge_time4])
+                                                [end_charge_time1, end_charge_time2, end_charge_time3, end_charge_time4],[SCALE_FACTOR1_CHARGE,SCALE_FUCTOR2_CHARGE,SCALE_FUCTOR3_CHARGE,SCALE_FUCTOR4_CHARGE])
 
     merged_df1 = create_day_discharge_profile(day, [start_discharge_time1, start_discharge_time2, start_discharge_time3, start_discharge_time4],
-                                                    [end_discharge_time1, end_discharge_time2, end_discharge_time3, end_discharge_time4])
+                                                    [end_discharge_time1, end_discharge_time2, end_discharge_time3, end_discharge_time4],[SCALE_FACTOR1_DISHCARGE,SCALE_FUCTOR2_DISCHARGE,SCALE_FUCTOR3_DISCHARGE,SCALE_FUCTOR4_DISCHARGE])
     #st.write(merged_df1,merged_df)
     final_profile=merged_df.add(merged_df1)
     total_charge,per_car_charge_list=calculateTotalEnergy_EV_Charge(merged_df)
@@ -297,15 +306,6 @@ def main():
                 carts = pd.DataFrame(cars)
                 carts=carts.set_index('Car Number')
                 st.table(carts)
-            
-            
-
-    
-
-    
-    
-
-
 if __name__ == '__main__':
      sns.set(style="darkgrid")
      DAY=st.selectbox('Select Day',range(1,322))
