@@ -376,5 +376,6 @@ def main():
         
 if __name__ == '__main__':
      sns.set(style="darkgrid")
+     st. set_page_config(layout="wide")
      DAY=st.selectbox('Select Day',range(1,322))
      main()
