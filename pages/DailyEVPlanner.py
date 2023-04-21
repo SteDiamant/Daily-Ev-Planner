@@ -195,6 +195,7 @@ def plot_pie_chart(labels, values):
     return fig
 
 def main():
+    
     days=ETL()
     day=days[DAY]
     with st.form("my_form"):
@@ -332,6 +333,7 @@ def main():
         with col2:
             fig2, ax2= plt.subplots(figsize=(4, 7))
             plt.bar(['Total Discharge', 'Total Charge'], [total_discharge, total_charge], color=['r', 'b'])
+
             ax2.text(1, total_charge, str(total_charge), ha='center', va='bottom')
             ax2.text(0, total_discharge, str(total_discharge), ha='center', va='bottom')
             plt.ylabel('Power (W)')
@@ -375,7 +377,9 @@ def main():
         
         
 if __name__ == '__main__':
+     
      sns.set(style="darkgrid")
      st. set_page_config(layout="wide")
+     st.title('EV Charging and Discharging Planner for a day')
      DAY=st.selectbox('Select Day',range(1,322))
      main()
