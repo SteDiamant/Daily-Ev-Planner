@@ -13,7 +13,7 @@ def split_dataframe_by_day(df):
 
 
 def ETL():
-    df = pd.read_csv('../data_original.csv')
+    df = pd.read_csv('data_original.csv')
     df['Time'] = pd.to_datetime(df['Time'])
     df['Month'] = df['Time'].dt.month
     df['DayOfMonth'] = df['Time'].dt.day
