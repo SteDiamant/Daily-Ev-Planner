@@ -38,6 +38,7 @@ class ProfileGenerator:
         date_range = pd.date_range(start=datetime.combine(start_date, start_time), end=datetime.combine(end_date, end_time), freq='15min')
         charge_profile = pd.DataFrame(index=date_range)
         charge_profile[f'EV{id}_charge (W)'] = pd.Series(data=scale_factor*np.random.randint(low=6400, high=7000, size=len(date_range)), index=charge_profile.index)
+        
         charge_profile.index.name = 'Time'
         
         return charge_profile
@@ -46,6 +47,7 @@ class ProfileGenerator:
         date_range = pd.date_range(start=datetime.combine(start_date, start_time), end=datetime.combine(end_date, end_time), freq='15min')
         discharge_profile = pd.DataFrame(index=date_range)
         discharge_profile[f'EV{id}_discharge (W)'] = pd.Series(data=scale_factor*np.random.randint(low=-7000, high=-6400, size=len(date_range)), index=discharge_profile.index)
+        
         discharge_profile.index.name = 'Time'
         
         return discharge_profile
@@ -76,7 +78,7 @@ def create_day_charge_profile(day, start_charge_times, end_charge_times,SCALE_FA
     __get__month = int(day['Month'].unique()[0])  # use index 0 to get the first (and only) element
     __get__day = int(day['DayOfMonth'].unique()[0])
 
-    # Create start and end datetime objects
+    # Create start and end datetime obkects
     start_date = datetime(year=2021, month=__get__month, day=__get__day)
     end_date = start_date  # set end date equal to start date
 
@@ -100,7 +102,7 @@ def create_day_discharge_profile(day, start_charge_times, end_charge_times,SCALE
     __get__month = int(day['Month'].unique()[0])  # use index 0 to get the first (and only) element
     __get__day = int(day['DayOfMonth'].unique()[0])
 
-    # Create start and end datetime objects
+    # Create start and end datetime obkects
     start_date = datetime(year=2021, month=__get__month, day=__get__day)
     end_date = start_date  # set end date equal to start date
 
@@ -119,21 +121,22 @@ def create_day_discharge_profile(day, start_charge_times, end_charge_times,SCALE
     merged_df = MergeProfiles.merge_discharge_profile(day, charge_data)
     
     return merged_df
+
 def calculateTotalEnergy_EV_Charge(df):
     population = 0
-    population += df['EV1_charge (W)'].sum()
-    population += df['EV2_charge (W)'].sum()
-    population += df['EV3_charge (W)'].sum()
-    population += df['EV4_charge (W)'].sum()
-    return population , [df['EV1_charge (W)'].sum(),df['EV2_charge (W)'].sum(),df['EV3_charge (W)'].sum(),df['EV4_charge (W)'].sum()]
+    population += df['EV1_charge (W)'].sum()*0.00025
+    population += df['EV2_charge (W)'].sum()*0.00025
+    population += df['EV3_charge (W)'].sum()*0.00025
+    population += df['EV4_charge (W)'].sum()*0.00025
+    return population , [df['EV1_charge (W)'].sum()*0.00025,df['EV2_charge (W)'].sum()*0.00025,df['EV3_charge (W)'].sum()*0.00025,df['EV4_charge (W)'].sum()*0.00025]
 
 def calculateTotalEnergy_EV_DisCharge(df):
     population = 0
-    population += df['EV1_discharge (W)'].sum()
-    population += df['EV2_discharge (W)'].sum()
-    population += df['EV3_discharge (W)'].sum()
-    population += df['EV4_discharge (W)'].sum()
-    return population , [df['EV1_discharge (W)'].sum(),df['EV2_discharge (W)'].sum(),df['EV3_discharge (W)'].sum(),df['EV4_discharge (W)'].sum()]
+    population += df['EV1_discharge (W)'].sum()*0.00025
+    population += df['EV2_discharge (W)'].sum()*0.00025
+    population += df['EV3_discharge (W)'].sum()*0.00025
+    population += df['EV4_discharge (W)'].sum()*0.00025
+    return population , [df['EV1_discharge (W)'].sum()*0.00025,df['EV2_discharge (W)'].sum()*0.00025,df['EV3_discharge (W)'].sum()*0.00025,df['EV4_discharge (W)'].sum()*0.00025]
 
 def count_positive_charge_negative_imbalance(df):
     count=0
@@ -150,10 +153,10 @@ def count_positive_charge_negative_imbalance(df):
     
 
     
-    return count,count1 ,total_count, [len(df[(df['EV1_charge (W)'] > 0) & (df['TotalImbalance'] <= 0)]),
-                                       len(df[(df['EV2_charge (W)'] > 0) & (df['TotalImbalance'] <= 0)]),
-                                       len(df[(df['EV3_charge (W)'] > 0) & (df['TotalImbalance'] <= 0)]),
-                                       len(df[(df['EV4_charge (W)'] > 0) & (df['TotalImbalance'] <= 0)])]
+    return count,count1 ,total_count, [len(df[(df['EV1_charge (W)'] > 0) & (df['TotalImbalance'] < 0)]),
+                                       len(df[(df['EV2_charge (W)'] > 0) & (df['TotalImbalance'] < 0)]),
+                                       len(df[(df['EV3_charge (W)'] > 0) & (df['TotalImbalance'] < 0)]),
+                                       len(df[(df['EV4_charge (W)'] > 0) & (df['TotalImbalance'] < 0)])]
 @st.cache_data
 def convert_df(df):
     # IMPORTANT: Cache the conversion to prevent computation on every rerun
@@ -183,7 +186,7 @@ def save_info(start_charge_time1,end_charge_time1,
         file.write(f"EV3 Discharge start Time: {start_discharge_time3} end Time {end_discharge_time3} ScaleFactor {SCALE_FUCTOR3_DISCHARGE}\n")
         file.write(f"EV4 Discharge start Time: {start_discharge_time4} end Time {end_discharge_time4} ScaleFactor {SCALE_FUCTOR4_DISCHARGE}\n")
         file.close()
-    
+
 
 def plot_pie_chart(labels, values):
     fig, ax = plt.subplots()
@@ -193,6 +196,59 @@ def plot_pie_chart(labels, values):
     ax.set_aspect('equal')
     plt.show()
     return fig
+# def update_batteryLVL(df,id):
+#     BATTERY_MAXIMUN_CAPACITY=10000
+#     BATERRY_MINIMUN_CAPACITY=0
+#     df[f"EV{id}_batteryLVL"] = df[f"EV{id}_charge (W)"].sum()+df[f"EV{id}_discharge (W)"].sum()
+#     if (df[f"EV{id}_batteryLVL"] > BATTERY_MAXIMUN_CAPACITY).any():
+#         st.write(f"EV{id} battery capacity  is {df[f'EV{id}_batteryLVL'][1]} more than the maximum capacity {BATTERY_MAXIMUN_CAPACITY}")
+#     if (df[f"EV{id}_batteryLVL"] < BATERRY_MINIMUN_CAPACITY).any():
+#         st.write(f"EV{id} battery capacity is {df[f'EV{id}_batteryLVL'][0]} and it is less than the minimum capacity {BATERRY_MINIMUN_CAPACITY}")
+#     return df
+# import pandas as pd
+
+def calculate_energy_storage(df,MAX_CO_CARS):
+    for k in range(1,MAX_CO_CARS+1):
+        # initialize an empty DataFrame to store the energy storage values
+        df[f'BatteryLVL{k}'] = 0
+        
+        # set the initial energy storage value
+        df.at[df.index[0], f'BatteryLVL{k}'] = 0
+        
+        # iterate over the rows of the DataFrame
+        for i in range(1, len(df)):
+            # calculate the energy storage value using the recursive formula
+            Ep_t = df.at[df.index[i-1], f'BatteryLVL{k}'] + df.at[df.index[i], f'EV{k}_charge (W)'] + df.at[df.index[i], f'EV{k}_discharge (W)']
+            
+            # append the new energy storage value to the DataFrame
+            df.at[df.index[i], f'BatteryLVL{k}'] = Ep_t
+            
+        
+        # return the energy storage DataFrame
+    return df
+import matplotlib.ticker as ticker
+
+def plot_battery_level(df):
+    # create a new figure and axis object
+    fig, ax = plt.subplots(1, 4, figsize=(10, 5), squeeze=True)
+    
+    # plot the battery level values
+    for i in range(1, 5):
+        ax[i-1].plot(df.index, df[f'BatteryLVL{i}'])
+        ax[i-1].set_title(f'EV{i}')
+        ax[i-1].set_xlabel('Time')
+        
+        
+        # set the tick labels on the x-axis to the desired format
+        tick_labels = [t.strftime('%H:%M') for t in df.index]
+        ax[i-1].set_xticklabels(tick_labels, rotation=45)
+    
+    # set a common label for the y-axis
+    fig.text(0.04, 0.5, 'Battery Level', va='center', rotation='vertical')
+    
+    # display the plot in Streamlit
+    st.pyplot(fig)
+
 
 def main():
     
@@ -208,6 +264,7 @@ def main():
                     start_charge_time1 = st.time_input('start charge time 1',value=time(hour=9, minute=30),key='start_charge_time1')
                     end_charge_time1 = st.time_input('end charge time 1',value=time(hour=15, minute=45),key='end_charge_time1')
                     SCALE_FACTOR1_CHARGE=st.slider('EV1 charge multiplier',min_value=0.0,max_value=5.0,value=1.0,step=0.1)
+                    #battery1=st.slider('EV1 battery Capacity at the moment of charge',min=0.0,max=100.0,value=50.0,step=0.1)
                     
             with dis1:
                 with st.expander('EV1 DisCharge'):
@@ -261,7 +318,7 @@ def main():
     __get__month = int(day['Month'].unique()[0])  # use index 0 to get the first (and only) element
     __get__day = int(day['DayOfMonth'].unique()[0])
 
-    # Create start and end datetime objects
+    # Create start and end datetime obkects
     start_date = datetime(year=2021, month=__get__month, day=__get__day)
     end_date = start_date  # set end date equal to start date
 
@@ -325,9 +382,9 @@ def main():
             ax1.text(3, per_car_discharge_list[3], str(round(per_car_discharge_list[3])), ha='center', va='bottom')
 
             # set y-axis label
-            plt.ylabel('Power (W)')
+            plt.ylabel('Energy (kWh)')
             # set title
-            plt.title('Total Power Exchange for each EVs')
+            plt.title('Total Energy Exchange for each EVs')
             # show plot
             st.pyplot(fig1)
         with col2:
@@ -336,24 +393,29 @@ def main():
 
             ax2.text(1, total_charge, str(total_charge), ha='center', va='bottom')
             ax2.text(0, total_discharge, str(total_discharge), ha='center', va='bottom')
-            plt.ylabel('Power (W)')
-            plt.title('Total Power exchange all EV')
+            plt.ylabel('Energy (kWh)')
+            plt.title('Total Energy exchange all EV')
             st.pyplot(fig2)
             
             good_energy_count,bad_energy_count,total_EV_demand_count,per_car_count_list=count_positive_charge_negative_imbalance(unique_df)
         with col3:
             st.pyplot(plot_pie_chart(["PVs","From Grid"],[good_energy_count,bad_energy_count]))
-            text1,text2=st.columns([2,1])
-            with text1:
-                st.markdown(f"Green Energy Used For Charging: {str(good_energy_count)} Wh :👍:")
-                st.markdown(f"Red Energy Used For Charging: {str(bad_energy_count)} Wh :👎:")
-                st.markdown(f"Total Energy Used For Charging: {str(bad_energy_count+good_energy_count)} Wh :🚙:")
-            with text2:
-                cars = {'Car Number': ['EV1','EV2','EV3','EV4'], 'Total Energy Used (Wh)': per_car_count_list}
-                carts = pd.DataFrame(cars)
-                carts=carts.set_index('Car Number')
-                st.table(carts)
-
+            st.write(good_energy_count,bad_energy_count,total_EV_demand_count,per_car_count_list)
+            # text1,text2=st.columns([2,1])
+            # with text1:
+            #     #st.markdown(f"Green Energy Used For Charging: {str(good_energy_count)} Wh :👍:")
+            #     #st.markdown(f"Red Energy Used For Charging: {str(bad_energy_count)} Wh :👎:")
+            #     #st.markdown(f"Total Energy Used For Charging: {str(bad_energy_count+good_energy_count)} Wh :🚙:")
+            #     pass
+            # with text2:
+            #     cars = {'Car Number': ['EV1','EV2','EV3','EV4'], 'Total Energy Used (Wh)': per_car_count_list}
+            #     carts = pd.DataFrame(cars)
+            #     carts=carts.set_index('Car Number')
+            #     st.table(carts)
+        #update_batteryLVL(unique_df,1)
+        calculate_energy_storage(unique_df,4)
+        with st.container():
+            plot_battery_level(unique_df)
         download= st.download_button(
             data=convert_df(unique_df),
             file_name=f"""EV_Profile{DAY}.csv""",
@@ -373,6 +435,8 @@ def main():
                                             SCALE_FUCTOR3_DISCHARGE,SCALE_FUCTOR4_DISCHARGE))
         if download:
             st.success('Downloaded')
+        
+            
             
         
         
@@ -383,3 +447,4 @@ if __name__ == '__main__':
      st.title('EV Charging and Discharging Planner for a day')
      DAY=st.selectbox('Select Day',range(1,322))
      main()
+     
