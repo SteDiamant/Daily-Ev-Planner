@@ -48,6 +48,7 @@ class ProfileGenerator:
         discharge_profile = pd.DataFrame(index=date_range)
         discharge_profile[f'EV{id}_discharge (W)'] = pd.Series(data=scale_factor*np.random.randint(low=-7000, high=-6400, size=len(date_range)), index=discharge_profile.index)
         
+
         discharge_profile.index.name = 'Time'
         
         return discharge_profile
@@ -196,6 +197,7 @@ def plot_pie_chart(labels, values):
     ax.set_aspect('equal')
     plt.show()
     return fig
+
 # def update_batteryLVL(df,id):
 #     BATTERY_MAXIMUN_CAPACITY=10000
 #     BATERRY_MINIMUN_CAPACITY=0
@@ -205,7 +207,6 @@ def plot_pie_chart(labels, values):
 #     if (df[f"EV{id}_batteryLVL"] < BATERRY_MINIMUN_CAPACITY).any():
 #         st.write(f"EV{id} battery capacity is {df[f'EV{id}_batteryLVL'][0]} and it is less than the minimum capacity {BATERRY_MINIMUN_CAPACITY}")
 #     return df
-# import pandas as pd
 
 def calculate_energy_storage(df,MAX_CO_CARS):
     for k in range(1,MAX_CO_CARS+1):
@@ -226,27 +227,105 @@ def calculate_energy_storage(df,MAX_CO_CARS):
         
         # return the energy storage DataFrame
     return df
-import matplotlib.ticker as ticker
+class html_generator:
+        @st.cache_data
+        def battery_lvl(id,value):
+            # Calculate the percentage of battery charge
+            charge_percentage = value / MAXIMUM_CAR_CAPACITY
+            print(charge_percentage)
 
+            # Set the height of the #charge div based on the charge percentage
+            charge_height = round(charge_percentage ,2)
+
+            # Replace the placeholder {value} in the HTML code with the actual value and charge height
+            html_code = f"""
+            <html lang="en">
+            <head>
+                <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+                <title>Detect Battery Status</title>
+                <!-- Google Fonts -->
+                <link
+                href="https://fonts.googleapis.com/css2?family=Roboto+Mono:wght@400;500&display=swap"
+                rel="stylesheet"
+                />
+                <!-- Stylesheet -->
+                <style>
+                /* CSS code for battery status interface */
+                .container {{
+                    width: 300px;
+                    margin: 50px auto;
+                    text-align: center;
+                }}
+
+                #battery {{
+                    position: relative;
+                    margin: 20px auto;
+                    width: 80px;
+                    height: 120px;
+                    border-radius: 10px;
+                    border: 5px solid #333;
+                }}
+
+                #charge {{
+                    position: absolute;
+                    bottom: 0;
+                    width: 100%;
+                    height: {100*value / MAXIMUM_CAR_CAPACITY}%; /* Set the height based on the charge percentage */
+                    background-color: #ff9800;
+                    border-radius: 0 0 10px 10px;
+                }}
+
+                #charge-level {{
+                    margin-top: -30px;
+                    font-family: 'Roboto Mono', monospace;
+                    font-size: 24px;
+                    font-weight: 500;
+                    color: #333;
+                }}
+
+                #charging-time {{
+                    font-family: 'Roboto Mono', monospace;
+                    font-size: 18px;
+                    color: #333;
+                }}
+                </style>
+            </head>
+            <body>
+                <div class="container">
+                <div id="charge-level">Car{id}</div> 
+                    </br>
+                    <div id="charge-level">{round(100*value/MAXIMUM_CAR_CAPACITY,2)}%</div> 
+                    </br>
+                <div id="battery">
+                    <div id="charge"></div>
+                </div>
+                <div id="charging-time"></div>
+                </div>
+                <script>
+
+                </script>
+            </body>
+            </html>
+            """
+            
+            return html_code
+@st.cache_data
 def plot_battery_level(df):
     # create a new figure and axis object
-    fig, ax = plt.subplots(1, 4, figsize=(10, 5), squeeze=True)
-    
+    fig, ax = plt.subplots(1,4, figsize=(8, 5))
     # plot the battery level values
     for i in range(1, 5):
-        ax[i-1].plot(df.index, df[f'BatteryLVL{i}'])
-        ax[i-1].set_title(f'EV{i}')
-        ax[i-1].set_xlabel('Time')
-        
-        
-        # set the tick labels on the x-axis to the desired format
-        tick_labels = [t.strftime('%H:%M') for t in df.index]
-        ax[i-1].set_xticklabels(tick_labels, rotation=45)
-    
-    # set a common label for the y-axis
-    fig.text(0.04, 0.5, 'Battery Level', va='center', rotation='vertical')
-    
-    # display the plot in Streamlit
+        #df=df.loc[~((df[f'BatteryLVL{i}'] == 0))]
+            #ax[i-1].stackplot(df.index, df[f'BatteryLVL{i}'], color='r'if df['TotalImbalance']>0 else 'g')
+            ax[i-1].stackplot(df.index, df[f'BatteryLVL{i}'], color='r')
+
+            ax[i-1].axhline(y=MAXIMUM_CAR_CAPACITY, xmin=0, xmax=1, color='r', linestyle='-',label='Maximum Capacity')
+            ax[i-1].axhline(y=MAXIMUM_CAR_CAPACITY*0.8, xmin=0, xmax=1, color='r', linestyle='--',label='80% Capacity%')
+            ax[i-1].axhline(y=MAXIMUM_CAR_CAPACITY*0.2, xmin=0, xmax=1, color='r', linestyle='--',label='20% Capacity')
+            ax[i-1].axhline(y=0, xmin=0, xmax=1, color='r', linestyle='--',label='Minimum Capacity')
+            ax[i-1].set_title(f'EV{i}')
+            ax[i-1].get_xaxis().set_visible(False)
+            ax[i-1].set_xlabel('Time')
     st.pyplot(fig)
 
 
@@ -414,8 +493,20 @@ def main():
             #     st.table(carts)
         #update_batteryLVL(unique_df,1)
         calculate_energy_storage(unique_df,4)
-        with st.container():
+        with st.expander('Battery Level'):
             plot_battery_level(unique_df)
+            pivot = unique_df.pivot_table(index=unique_df.index.hour, columns=unique_df.index.dayofweek, values='BatteryLVL1')
+            #st.write(pivot)
+            c1,c2,c3,c4 = st.columns(4)
+            with c1:
+                st.markdown(html_generator.battery_lvl(1,unique_df['BatteryLVL1'][-1]),unsafe_allow_html=True)
+            with c2:
+                st.markdown(html_generator.battery_lvl(2,unique_df['BatteryLVL2'][-1]),unsafe_allow_html=True)
+            with c3:
+                st.markdown(html_generator.battery_lvl(3,unique_df['BatteryLVL3'][-1]),unsafe_allow_html=True)
+            with c4:
+                st.markdown(html_generator.battery_lvl(4,unique_df['BatteryLVL4'][-1]),unsafe_allow_html=True)
+            
         download= st.download_button(
             data=convert_df(unique_df),
             file_name=f"""EV_Profile{DAY}.csv""",
@@ -446,5 +537,6 @@ if __name__ == '__main__':
      st. set_page_config(layout="wide")
      st.title('EV Charging and Discharging Planner for a day')
      DAY=st.selectbox('Select Day',range(1,322))
+     MAXIMUM_CAR_CAPACITY=300000
      main()
      

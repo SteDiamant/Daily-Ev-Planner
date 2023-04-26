@@ -1,0 +1,8 @@
+EV1 Charge start Time: 09:30:00 end Time 11:45:00 ScaleFactor 1.3
+EV2 Charge start Time: 08:30:00 end Time 12:00:00 ScaleFactor 0.9
+EV3 Charge start Time: 09:30:00 end Time 15:30:00 ScaleFactor 0.0
+EV4 Charge start Time: 08:15:00 end Time 17:45:00 ScaleFactor 0.0
+EV1 Discharge start Time: 17:00:00 end Time 22:45:00 ScaleFactor 0.4
+EV2 Discharge start Time: 22:45:00 end Time 22:45:00 ScaleFactor 1.0
+EV3 Discharge start Time: 17:00:00 end Time 22:15:00 ScaleFactor 0.0
+EV4 Discharge start Time: 18:00:00 end Time 21:00:00 ScaleFactor 0.0
