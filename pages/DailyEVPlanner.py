@@ -7,6 +7,7 @@ import seaborn as sns
 from html2markdown import convert
 
 
+
 def split_dataframe_by_day(df):
         days = [df[i:i+96] for i in range(0, len(df), 96)]
         return days
@@ -481,8 +482,8 @@ def main():
             fig2, ax2= plt.subplots(figsize=(4, 7))
             plt.bar(['Total Discharge', 'Total Charge'], [total_discharge, total_charge], color=['r', 'b'])
 
-            ax2.text(1, total_charge, str(total_charge), ha='center', va='bottom')
-            ax2.text(0, total_discharge, str(total_discharge), ha='center', va='bottom')
+            ax2.text(1, total_charge, str(round(total_charge,2)), ha='center', va='bottom')
+            ax2.text(0, total_discharge, str(round(total_discharge,2)), ha='center', va='bottom')
             plt.ylabel('Energy (kWh)')
             plt.title('Total Energy exchange all EV')
             st.pyplot(fig2)
@@ -521,11 +522,15 @@ def main():
                 st.markdown(car1_html11, unsafe_allow_html=True)
             with c13:
                 fig,ax=plt.subplots(figsize=(10,4))
-                ax.stackplot(unique_df.index, unique_df['BatteryLVL1'], color='r')
-                ax.axhline(y=MAXIMUM_CAR_CAPACITY, xmin=0, xmax=1, color='r', linestyle='-',label='Maximum Capacity')
-                ax.axhline(y=MAXIMUM_CAR_CAPACITY*0.8, xmin=0, xmax=1, color='r', linestyle='--',label='80% Capacity%')
-                ax.axhline(y=MAXIMUM_CAR_CAPACITY*0.2, xmin=0, xmax=1, color='r', linestyle='--',label='20% Capacity')
-                ax.axhline(y=0, xmin=0, xmax=1, color='r', linestyle='--',label='Minimum Capacity')
+                ax.stackplot(unique_df.index, unique_df['BatteryLVL1'], color='g')
+                unique_df['EV1_green_energy'] = unique_df[(unique_df['EV1_charge (W)'] >= 0) & (unique_df['Total_Imbalance (W)'] > 0)]['BatteryLVL1']
+                ax.stackplot(unique_df.index, unique_df['EV1_green_energy'], color='r')
+
+
+                ax.axhline(y=MAXIMUM_CAR_CAPACITY, xmin=0, xmax=1, color='blue', linestyle='-',label='Maximum Capacity')
+                ax.axhline(y=MAXIMUM_CAR_CAPACITY*0.8, xmin=0, xmax=1, color='blue', linestyle='--',label='80% Capacity%')
+                ax.axhline(y=MAXIMUM_CAR_CAPACITY*0.2, xmin=0, xmax=1, color='blue', linestyle='--',label='20% Capacity')
+                ax.axhline(y=0, xmin=0, xmax=1, color='blue', linestyle='--',label='Minimum Capacity')
                 ax.set_title(f'EV{1}')
                 st.pyplot(fig)
             st.write('------------------------------------')
@@ -543,7 +548,9 @@ def main():
                 st.markdown(car1_html12, unsafe_allow_html=True)
             with c23:
                 fig,ax=plt.subplots(figsize=(10,5))
-                ax.stackplot(unique_df.index, unique_df['BatteryLVL2'], color='r')
+                ax.stackplot(unique_df.index, unique_df['BatteryLVL2'], color='g')
+                unique_df['EV2_green_energy'] = unique_df[(unique_df['EV2_charge (W)'] >= 0) & (unique_df['Total_Imbalance (W)'] > 0)]['BatteryLVL2']
+                ax.stackplot(unique_df.index, unique_df['EV2_green_energy'], color='r')
                 ax.axhline(y=MAXIMUM_CAR_CAPACITY, xmin=0, xmax=1, color='r', linestyle='-',label='Maximum Capacity')
                 ax.axhline(y=MAXIMUM_CAR_CAPACITY*0.8, xmin=0, xmax=1, color='r', linestyle='--',label='80% Capacity%')
                 ax.axhline(y=MAXIMUM_CAR_CAPACITY*0.2, xmin=0, xmax=1, color='r', linestyle='--',label='20% Capacity')
@@ -565,7 +572,9 @@ def main():
                 st.markdown(car1_html13, unsafe_allow_html=True)
             with c33:
                 fig,ax=plt.subplots(figsize=(10,5))
-                ax.stackplot(unique_df.index, unique_df['BatteryLVL3'], color='r')
+                ax.stackplot(unique_df.index, unique_df['BatteryLVL3'], color='g')
+                unique_df['EV3_green_energy'] = unique_df[(unique_df['EV3_charge (W)'] >= 0) & (unique_df['Total_Imbalance (W)'] > 0)]['BatteryLVL3']
+                ax.stackplot(unique_df.index, unique_df['EV3_green_energy'], color='r')
                 ax.axhline(y=MAXIMUM_CAR_CAPACITY, xmin=0, xmax=1, color='r', linestyle='-',label='Maximum Capacity')
                 ax.axhline(y=MAXIMUM_CAR_CAPACITY*0.8, xmin=0, xmax=1, color='r', linestyle='--',label='80% Capacity%')
                 ax.axhline(y=MAXIMUM_CAR_CAPACITY*0.2, xmin=0, xmax=1, color='r', linestyle='--',label='20% Capacity')
@@ -587,7 +596,9 @@ def main():
                 st.markdown(car1_html11, unsafe_allow_html=True)
             with c43:
                 fig,ax=plt.subplots(figsize=(10,5))
-                ax.stackplot(unique_df.index, unique_df['BatteryLVL4'], color='r')
+                ax.stackplot(unique_df.index, unique_df['BatteryLVL4'], color='g')
+                unique_df['EV4_green_energy'] = unique_df[(unique_df['EV4_charge (W)'] >= 0) & (unique_df['Total_Imbalance (W)'] > 0)]['BatteryLVL4']
+                ax.stackplot(unique_df.index, unique_df['EV4_green_energy'], color='r')
                 ax.axhline(y=MAXIMUM_CAR_CAPACITY, xmin=0, xmax=1, color='r', linestyle='-',label='Maximum Capacity')
                 ax.axhline(y=MAXIMUM_CAR_CAPACITY*0.8, xmin=0, xmax=1, color='r', linestyle='--',label='80% Capacity%')
                 ax.axhline(y=MAXIMUM_CAR_CAPACITY*0.2, xmin=0, xmax=1, color='r', linestyle='--',label='20% Capacity')
