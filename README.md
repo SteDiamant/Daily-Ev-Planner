@@ -43,7 +43,7 @@ $$\text{TotalDemand (W)} = \text{General Demand (W)} + \text{Heating Demand (W)}
 $$\text{Imbalance (W)} = \text{TotalDemand (W)} + \text{PV (W)}*Number\_PVs$$
 
 $$\text{Total\_EV\_Charge (W)}={Total\_EV\_Charge\_1 (W)} + {Total\_EV\_Charge\_2 (W)} +{Total\_EV\_Charge\_3 (W)}+{Total\_EV\_Charge\_4 (W)}  $$
-$$\text{Total\_EV\_DisCharge (W)}={Total\_EV\_DisCharge\_1 (W)} + {Total\_EV\_DisCharge\_2 (W)} +{Total\_EV\_DisCharge\_3 (W)}+{Total\_EV\_DisCharge\_4 (W)}  $$
+$$\text{Total\_EV\_DisCharge (W)}={Total\_EV\_DisCharge\_1 (W)} + {Total\_EVDisCharge\_2 (W)} +{Total\_EV\_DisCharge\_3 (W)}+{Total\_EV\_DisCharge\_4 (W)}  $$
 
 $$\text{Total\_Imbalance (W)} = \text{Imbalance (W)} + \text{Total\_EV\_Charge (W)} + \text{Total\_EV\_DisCharge (W)}$$
 
@@ -79,7 +79,18 @@ The above equations determine the energy flow direction based on the state of ch
 
 
 Overall, this tool is a useful and intuitive way to visualize the energy exchange for multiple EVs and can be easily customized to display different data.
+### Battery View
+The 'BatteryView' creates 4 expanders that display the battery level of 4 different electric vehicles (EVs) and a graph of their battery level over time. 
 
+![expadners](imgs/expander.png)
+
+Each expander consists of two columns, where the left column shows the starting and ending battery level of the charging session for the corresponding EV, while the right column displays a graph of the battery level over time.
+
+![battery1](imgs/battey1.png)
+
+The graph has two areas: one area represents the energy charged from green sources, while the other represents energy charged from non-green sources. 
+
+There are blue horizontal lines on the graph that indicate the battery capacity levels of the EV (20%, 80%, and 100%), and a red horizontal line indicating the maximum battery capacity of the EV. 
 
 ## Contributing
 

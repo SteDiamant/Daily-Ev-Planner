@@ -356,7 +356,7 @@ def main():
             with ch2:
                 with st.expander('EV2 Charge'):
                     start_charge_time2 = st.time_input('start charge time 2',value=time(hour=8, minute=30))
-                    end_charge_time2 = st.time_input('end charge time 2',value=time(hour=18, minute=0))
+                    end_charge_time2 = st.time_input('end charge time 2',value=time(hour=13, minute=30))
                     SCALE_FUCTOR2_CHARGE=st.slider('EV2 charge multiplier',min_value=0.0,max_value=5.0,value=1.0,step=0.1)
                     battery2=st.slider('Initial EV2 Battery LVL',min_value=0.0,max_value=300000.0,value=100000.0,step=1000.0)
                     
@@ -516,6 +516,7 @@ def main():
                 fig,ax=plt.subplots(figsize=(10,2))
                 ax.stackplot(unique_df.index, unique_df['BatteryLVL1'], color='g')
                 unique_df['EV1_green_energy'] = unique_df[(unique_df['EV1_charge (W)'] >= 0) & (unique_df['Total_Imbalance (W)'] > 0)]['BatteryLVL1']
+                
                 ax.stackplot(unique_df.index, unique_df['EV1_green_energy'], color='r')
                 ax.axhline(y=MAXIMUM_CAR_CAPACITY, xmin=0, xmax=1, color='blue', linestyle='-',label='Maximum Capacity')
                 ax.axhline(y=MAXIMUM_CAR_CAPACITY*0.8, xmin=0, xmax=1, color='blue', linestyle='--',label='80% Capacity%')
@@ -627,7 +628,7 @@ if __name__ == '__main__':
      st. set_page_config(layout="wide")
      st.title('EV Charging and Discharging Planner for a day')
      DAY=st.selectbox('Select Day',range(1,322))
-     MAXIMUM_CAR_CAPACITY=st.number_input('MaximumCarCapacity',min_value=0,max_value=300000,value=100000,step=10000,key="max_car_cap_input")
+     MAXIMUM_CAR_CAPACITY=st.number_input('MaximumCarCapacity',min_value=0,max_value=300000,value=300000,step=10000,key="max_car_cap_input")
      
      main()
      
