@@ -33,6 +33,92 @@ def ETL():
     
     return days
 
+class HtmlGenerator():
+        
+   def battery_lvl1(id,value):
+
+        # Calculate the percentage of battery charge
+        charge_percentage = value / MAXIMUM_CAR_CAPACITY
+        
+        # Set the height of the #charge div based on the charge percentage
+        charge_height = round(charge_percentage * 100, 2)
+        
+        # Replace the placeholder {value} in the HTML code with the actual value and charge height
+        html_code = f"""
+        
+        <html lang="en">
+        <head>
+            <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+            <title>Detect Battery Status</title>
+            <!-- Google Fonts -->
+            <link href="https://fonts.googleapis.com/css2?family=Roboto+Mono:wght@400;500&display=swap" rel="stylesheet" />
+            <!-- Stylesheet -->
+            <style>
+                /* CSS code for battery status interface */
+
+                
+                .container {{
+                    width: 300px;
+                    margin: 50px auto;
+                    text-align: center;
+                }}
+
+                #battery {{
+                    position: relative;
+                    margin: 20px auto;
+                    width: 80px;
+                    height: 120px;
+                    border-radius: 10px;
+                    border: 5px solid #333;
+                }}
+
+                #charge{id} {{
+                    position: absolute;
+                    bottom: 0;
+                    width: 100%;
+                    
+                    background-color: #ff9800;
+                    border-radius: 0 0 10px 10px;
+                }}
+
+                #charge-level {{
+                    margin-top: -50px;
+                    font-family: 'Roboto Mono', monospace;
+                    font-size: 24px;
+                    font-weight: 500;
+                    color: #333;
+                }}
+
+                #charging-time {{
+                    font-family: 'Roboto Mono', monospace;
+                    font-size: 18px;
+                    color: #333;
+                }}
+            </style>
+            </head>
+            <body>
+                <div class="container{id}">
+                    <div id="charge-level{id}">
+                        
+                        <h3>Car{id} Battery Level</h3>
+                        <div id="battery">
+                            <div id="charge-level">{charge_height}%<br>
+                                <div id="charge{id}" style="height:{charge_height}%;">
+                                
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </body>
+
+        </html>
+        """
+        
+        
+        markdown_code = convert(html_code)
+        return markdown_code
+
 
 class ProfileGenerator:
     def crete_charge_profile(df,start_time,end_time,start_date,end_date,id,scale_factor) :
@@ -199,23 +285,13 @@ def plot_pie_chart(labels, values):
     plt.show()
     return fig
 
-# def update_batteryLVL(df,id):
-#     BATTERY_MAXIMUN_CAPACITY=10000
-#     BATERRY_MINIMUN_CAPACITY=0
-#     df[f"EV{id}_batteryLVL"] = df[f"EV{id}_charge (W)"].sum()+df[f"EV{id}_discharge (W)"].sum()
-#     if (df[f"EV{id}_batteryLVL"] > BATTERY_MAXIMUN_CAPACITY).any():
-#         st.write(f"EV{id} battery capacity  is {df[f'EV{id}_batteryLVL'][1]} more than the maximum capacity {BATTERY_MAXIMUN_CAPACITY}")
-#     if (df[f"EV{id}_batteryLVL"] < BATERRY_MINIMUN_CAPACITY).any():
-#         st.write(f"EV{id} battery capacity is {df[f'EV{id}_batteryLVL'][0]} and it is less than the minimum capacity {BATERRY_MINIMUN_CAPACITY}")
-#     return df
-
-def calculate_energy_storage(df,MAX_CO_CARS):
+def calculate_energy_storage(df,MAX_CO_CARS,STARTING_CAR_CAPACITY):
     for k in range(1,MAX_CO_CARS+1):
         # initialize an empty DataFrame to store the energy storage values
-        df[f'BatteryLVL{k}'] = 0
+        df[f'BatteryLVL{k}'] = STARTING_CAR_CAPACITY[k-1]
         
         # set the initial energy storage value
-        df.at[df.index[0], f'BatteryLVL{k}'] = 0
+        df.at[df.index[0], f'BatteryLVL{k}'] = STARTING_CAR_CAPACITY[k-1]
         
         # iterate over the rows of the DataFrame
         for i in range(1, len(df)):
@@ -228,94 +304,8 @@ def calculate_energy_storage(df,MAX_CO_CARS):
         
         # return the energy storage DataFrame
     return df
-class HtmlGenerator():
-        
-   def battery_lvl1(id,value):
-
-        # Calculate the percentage of battery charge
-        charge_percentage = value / MAXIMUM_CAR_CAPACITY
-        
-        # Set the height of the #charge div based on the charge percentage
-        charge_height = round(charge_percentage * 100, 2)
-        
-        # Replace the placeholder {value} in the HTML code with the actual value and charge height
-        html_code = f"""
-        
-        <html lang="en">
-        <head>
-            <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-            <title>Detect Battery Status</title>
-            <!-- Google Fonts -->
-            <link href="https://fonts.googleapis.com/css2?family=Roboto+Mono:wght@400;500&display=swap" rel="stylesheet" />
-            <!-- Stylesheet -->
-            <style>
-                /* CSS code for battery status interface */
-
-                
-                .container {{
-                    width: 300px;
-                    margin: 50px auto;
-                    text-align: center;
-                }}
-
-                #battery {{
-                    position: relative;
-                    margin: 20px auto;
-                    width: 80px;
-                    height: 120px;
-                    border-radius: 10px;
-                    border: 5px solid #333;
-                }}
-
-                #charge{id} {{
-                    position: absolute;
-                    bottom: 0;
-                    width: 100%;
-                    
-                    background-color: #ff9800;
-                    border-radius: 0 0 10px 10px;
-                }}
-
-                #charge-level {{
-                    margin-top: -50px;
-                    font-family: 'Roboto Mono', monospace;
-                    font-size: 24px;
-                    font-weight: 500;
-                    color: #333;
-                }}
-
-                #charging-time {{
-                    font-family: 'Roboto Mono', monospace;
-                    font-size: 18px;
-                    color: #333;
-                }}
-            </style>
-            </head>
-            <body>
-                <div class="container{id}">
-                    <div id="charge-level{id}">
-                        
-                        <h3>Car{id} Battery Level</h3>
-                        <div id="battery">
-                            <div id="charge-level">{charge_height}%<br>
-                                <div id="charge{id}" style="height:{charge_height}%;">
-                                
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </body>
-
-        </html>
-        """
-        
-        
-        markdown_code = convert(html_code)
-        return markdown_code
 
 
-    
 @st.cache_data
 def plot_battery_level(df):
     # create a new figure and axis object
@@ -350,13 +340,16 @@ def main():
                     start_charge_time1 = st.time_input('start charge time 1',value=time(hour=9, minute=30),key='start_charge_time1')
                     end_charge_time1 = st.time_input('end charge time 1',value=time(hour=15, minute=45),key='end_charge_time1')
                     SCALE_FACTOR1_CHARGE=st.slider('EV1 charge multiplier',min_value=0.0,max_value=5.0,value=1.0,step=0.1)
-                    #battery1=st.slider('EV1 battery Capacity at the moment of charge',min=0.0,max=100.0,value=50.0,step=0.1)
+                    battery1=st.slider('Initial EV1 Battery LVL',min_value=0.0,max_value=300000.0,value=100000.0,step=1000.0)
+                    
+
                     
             with dis1:
                 with st.expander('EV1 DisCharge'):
                     start_discharge_time1 = st.time_input('start discahrge time 1',value=time(hour=17, minute=0),key='start_discharge_time1')
                     end_discharge_time1 = st.time_input('end discharge time 1',value=time(hour=22, minute=45),key='end_discharge_time1')
                     SCALE_FACTOR1_DISHCARGE=st.slider('EV1 discharge multiplier',min_value=0.0,max_value=5.0,value=1.0,step=0.1)
+                    
         with car2:
             st.title('EV2')
             ch2,dis2=st.columns(2)
@@ -365,12 +358,16 @@ def main():
                     start_charge_time2 = st.time_input('start charge time 2',value=time(hour=8, minute=30))
                     end_charge_time2 = st.time_input('end charge time 2',value=time(hour=18, minute=0))
                     SCALE_FUCTOR2_CHARGE=st.slider('EV2 charge multiplier',min_value=0.0,max_value=5.0,value=1.0,step=0.1)
+                    battery2=st.slider('Initial EV2 Battery LVL',min_value=0.0,max_value=300000.0,value=100000.0,step=1000.0)
+                    
                     
             with dis2:
                 with st.expander('EV2 DisCharge'):
                     start_discharge_time2 = st.time_input('start discahrge time 2',value=time(hour=19, minute=0))
                     end_discharge_time2 = st.time_input('end discharge time 2',value=time(hour=19, minute=30))
                     SCALE_FUCTOR2_DISCHARGE=st.slider('EV2 discharge multiplier',min_value=0.0,max_value=5.0,value=1.0,step=0.1)
+                   
+                    
         
         with car3:
             st.title('EV3')
@@ -380,6 +377,8 @@ def main():
                     start_charge_time3= st.time_input('start charge time 3',value=time(hour=9, minute=30))
                     end_charge_time3 = st.time_input('end charge time 3',value=time(hour=15, minute=30))
                     SCALE_FUCTOR3_CHARGE=st.slider('EV3 charge multiplier',min_value=0.0,max_value=5.0,value=1.0,step=0.1)
+                    battery3=st.slider('Initial EV3 Battery LVL',min_value=0.0,max_value=300000.0,value=100000.0,step=1000.0)
+                    
                     
             with dis3:
                 with st.expander('EV3 DisCharge'):
@@ -394,6 +393,10 @@ def main():
                     start_charge_time4 = st.time_input('start charge time 4',value=time(hour=8, minute=15))
                     end_charge_time4 = st.time_input('end charge time 4',value=time(hour=17, minute=45))
                     SCALE_FUCTOR4_CHARGE=st.slider('EV4 charge multiplier',min_value=0.0,max_value=5.0,value=1.0,step=0.1)
+                    battery4=st.slider('Initial EV4 Battery LVL',min_value=0.0,max_value=300000.0,value=100000.0,step=1000.0)
+                    
+
+
             with dis4:
                 with st.expander('EV4 DisCharge'):
                     start_discharge_time4 = st.time_input('start discahrge time 4',value=time(hour=18, minute=0))
@@ -491,20 +494,9 @@ def main():
             good_energy_count,bad_energy_count,total_EV_demand_count,per_car_count_list=count_positive_charge_negative_imbalance(unique_df)
         with col3:
             st.pyplot(plot_pie_chart(["PVs","From Grid"],[good_energy_count,bad_energy_count]))
-            #st.write(good_energy_count,bad_energy_count,total_EV_demand_count,per_car_count_list)
-            # text1,text2=st.columns([2,1])
-            # with text1:
-            #     #st.markdown(f"Green Energy Used For Charging: {str(good_energy_count)} Wh :👍:")
-            #     #st.markdown(f"Red Energy Used For Charging: {str(bad_energy_count)} Wh :👎:")
-            #     #st.markdown(f"Total Energy Used For Charging: {str(bad_energy_count+good_energy_count)} Wh :🚙:")
-            #     pass
-            # with text2:
-            #     cars = {'Car Number': ['EV1','EV2','EV3','EV4'], 'Total Energy Used (Wh)': per_car_count_list}
-            #     carts = pd.DataFrame(cars)
-            #     carts=carts.set_index('Car Number')
-            #     st.table(carts)
-        #update_batteryLVL(unique_df,1)
-        calculate_energy_storage(unique_df,4)
+        
+        starting_car_capacity_list=[battery1,battery2,battery3,battery4]
+        calculate_energy_storage(unique_df,4,starting_car_capacity_list)
         
             
             
@@ -521,19 +513,17 @@ def main():
                 car1_html11=HtmlGenerator.battery_lvl1(1,car1_battery_lvl11)
                 st.markdown(car1_html11, unsafe_allow_html=True)
             with c13:
-                fig,ax=plt.subplots(figsize=(10,4))
+                fig,ax=plt.subplots(figsize=(10,2))
                 ax.stackplot(unique_df.index, unique_df['BatteryLVL1'], color='g')
                 unique_df['EV1_green_energy'] = unique_df[(unique_df['EV1_charge (W)'] >= 0) & (unique_df['Total_Imbalance (W)'] > 0)]['BatteryLVL1']
                 ax.stackplot(unique_df.index, unique_df['EV1_green_energy'], color='r')
-
-
                 ax.axhline(y=MAXIMUM_CAR_CAPACITY, xmin=0, xmax=1, color='blue', linestyle='-',label='Maximum Capacity')
                 ax.axhline(y=MAXIMUM_CAR_CAPACITY*0.8, xmin=0, xmax=1, color='blue', linestyle='--',label='80% Capacity%')
                 ax.axhline(y=MAXIMUM_CAR_CAPACITY*0.2, xmin=0, xmax=1, color='blue', linestyle='--',label='20% Capacity')
                 ax.axhline(y=0, xmin=0, xmax=1, color='blue', linestyle='--',label='Minimum Capacity')
                 ax.set_title(f'EV{1}')
                 st.pyplot(fig)
-            st.write('------------------------------------')
+                st.write('------------------------------------')
         with st.expander('Battery Level 2'):
             c21,c23 = st.columns([1,3])
             with c21:
@@ -547,7 +537,7 @@ def main():
                 car1_html12=HtmlGenerator.battery_lvl1(1,car1_battery_lvl12)
                 st.markdown(car1_html12, unsafe_allow_html=True)
             with c23:
-                fig,ax=plt.subplots(figsize=(10,5))
+                fig,ax=plt.subplots(figsize=(10,2))
                 ax.stackplot(unique_df.index, unique_df['BatteryLVL2'], color='g')
                 unique_df['EV2_green_energy'] = unique_df[(unique_df['EV2_charge (W)'] >= 0) & (unique_df['Total_Imbalance (W)'] > 0)]['BatteryLVL2']
                 ax.stackplot(unique_df.index, unique_df['EV2_green_energy'], color='r')
@@ -571,7 +561,7 @@ def main():
                 car1_html13=HtmlGenerator.battery_lvl1(1,car1_battery_lvl13)
                 st.markdown(car1_html13, unsafe_allow_html=True)
             with c33:
-                fig,ax=plt.subplots(figsize=(10,5))
+                fig,ax=plt.subplots(figsize=(10,2))
                 ax.stackplot(unique_df.index, unique_df['BatteryLVL3'], color='g')
                 unique_df['EV3_green_energy'] = unique_df[(unique_df['EV3_charge (W)'] >= 0) & (unique_df['Total_Imbalance (W)'] > 0)]['BatteryLVL3']
                 ax.stackplot(unique_df.index, unique_df['EV3_green_energy'], color='r')
@@ -595,7 +585,7 @@ def main():
                 car1_html11=HtmlGenerator.battery_lvl1(1,car1_battery_lvl11)
                 st.markdown(car1_html11, unsafe_allow_html=True)
             with c43:
-                fig,ax=plt.subplots(figsize=(10,5))
+                fig,ax=plt.subplots(figsize=(10,2))
                 ax.stackplot(unique_df.index, unique_df['BatteryLVL4'], color='g')
                 unique_df['EV4_green_energy'] = unique_df[(unique_df['EV4_charge (W)'] >= 0) & (unique_df['Total_Imbalance (W)'] > 0)]['BatteryLVL4']
                 ax.stackplot(unique_df.index, unique_df['EV4_green_energy'], color='r')
@@ -637,6 +627,7 @@ if __name__ == '__main__':
      st. set_page_config(layout="wide")
      st.title('EV Charging and Discharging Planner for a day')
      DAY=st.selectbox('Select Day',range(1,322))
-     MAXIMUM_CAR_CAPACITY=300000
+     MAXIMUM_CAR_CAPACITY=st.number_input('MaximumCarCapacity',min_value=0,max_value=300000,value=100000,step=10000,key="max_car_cap_input")
+     
      main()
      
