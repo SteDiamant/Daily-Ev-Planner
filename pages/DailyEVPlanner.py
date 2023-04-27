@@ -333,74 +333,74 @@ def main():
     with st.form("my_form"):
         car1,car2,car3,car4=st.columns(4)
         with car1:
-            st.title('EV1')
+            st.title('EV1 :car:')
             ch1,dis1=st.columns(2)
             with ch1:
                 with st.expander('EV1 Charge'):
-                    start_charge_time1 = st.time_input('start charge time 1',value=time(hour=9, minute=30),key='start_charge_time1')
-                    end_charge_time1 = st.time_input('end charge time 1',value=time(hour=15, minute=45),key='end_charge_time1')
+                    start_charge_time1 = st.time_input('start charge1 :clock1: ',value=time(hour=9, minute=30),key='start_charge_time1')
+                    end_charge_time1 = st.time_input('end charge1 :checkered_flag:',value=time(hour=15, minute=45),key='end_charge_time1')
                     SCALE_FACTOR1_CHARGE=st.slider('EV1 charge multiplier',min_value=0.0,max_value=5.0,value=1.0,step=0.1)
-                    battery1=st.slider('Initial EV1 Battery LVL',min_value=0.0,max_value=300000.0,value=100000.0,step=1000.0)
+                    battery1=st.slider('Initial EV1 Battery:battery:',min_value=0.0,max_value=300000.0,value=100000.0,step=1000.0)
                     
 
                     
             with dis1:
                 with st.expander('EV1 DisCharge'):
-                    start_discharge_time1 = st.time_input('start discahrge time 1',value=time(hour=17, minute=0),key='start_discharge_time1')
-                    end_discharge_time1 = st.time_input('end discharge time 1',value=time(hour=22, minute=45),key='end_discharge_time1')
+                    start_discharge_time1 = st.time_input('start discahrge 1 :clock1:',value=time(hour=17, minute=0),key='start_discharge_time1')
+                    end_discharge_time1 = st.time_input('end discharge 1:checkered_flag:',value=time(hour=22, minute=45),key='end_discharge_time1')
                     SCALE_FACTOR1_DISHCARGE=st.slider('EV1 discharge multiplier',min_value=0.0,max_value=5.0,value=1.0,step=0.1)
                     
         with car2:
-            st.title('EV2')
+            st.title('EV2 :car:')
             ch2,dis2=st.columns(2)
             with ch2:
                 with st.expander('EV2 Charge'):
-                    start_charge_time2 = st.time_input('start charge time 2',value=time(hour=8, minute=30))
-                    end_charge_time2 = st.time_input('end charge time 2',value=time(hour=13, minute=30))
+                    start_charge_time2 = st.time_input('start charge 2 :clock1:',value=time(hour=8, minute=30))
+                    end_charge_time2 = st.time_input('end charge 2 :checkered_flag:',value=time(hour=13, minute=30))
                     SCALE_FUCTOR2_CHARGE=st.slider('EV2 charge multiplier',min_value=0.0,max_value=5.0,value=1.0,step=0.1)
-                    battery2=st.slider('Initial EV2 Battery LVL',min_value=0.0,max_value=300000.0,value=100000.0,step=1000.0)
+                    battery2=st.slider('Initial EV2 Battery:battery:',min_value=0.0,max_value=300000.0,value=100000.0,step=1000.0)
                     
                     
             with dis2:
                 with st.expander('EV2 DisCharge'):
-                    start_discharge_time2 = st.time_input('start discahrge time 2',value=time(hour=19, minute=0))
-                    end_discharge_time2 = st.time_input('end discharge time 2',value=time(hour=19, minute=30))
+                    start_discharge_time2 = st.time_input('start discahrge 2 :clock1:',value=time(hour=19, minute=0))
+                    end_discharge_time2 = st.time_input('end discharge 2 :checkered_flag:',value=time(hour=19, minute=30))
                     SCALE_FUCTOR2_DISCHARGE=st.slider('EV2 discharge multiplier',min_value=0.0,max_value=5.0,value=1.0,step=0.1)
                    
                     
         
         with car3:
-            st.title('EV3')
+            st.title('EV3 :car:')
             ch3,dis3=st.columns(2)
             with ch3:
                 with st.expander('EV3 Charge'):
-                    start_charge_time3= st.time_input('start charge time 3',value=time(hour=9, minute=30))
-                    end_charge_time3 = st.time_input('end charge time 3',value=time(hour=15, minute=30))
+                    start_charge_time3= st.time_input('start charge 3 :clock1:',value=time(hour=9, minute=30))
+                    end_charge_time3 = st.time_input('end charge 3 :checkered_flag:',value=time(hour=15, minute=30))
                     SCALE_FUCTOR3_CHARGE=st.slider('EV3 charge multiplier',min_value=0.0,max_value=5.0,value=1.0,step=0.1)
-                    battery3=st.slider('Initial EV3 Battery LVL',min_value=0.0,max_value=300000.0,value=100000.0,step=1000.0)
+                    battery3=st.slider('Initial EV3 Battery:battery:',min_value=0.0,max_value=300000.0,value=100000.0,step=1000.0)
                     
                     
             with dis3:
                 with st.expander('EV3 DisCharge'):
-                    start_discharge_time3 = st.time_input('start discahrge time 3',value=time(hour=17, minute=0))
-                    end_discharge_time3 = st.time_input('end discharge time 3',value=time(hour=22, minute=15))
+                    start_discharge_time3 = st.time_input('start discahrge 3 :clock1:',value=time(hour=17, minute=0))
+                    end_discharge_time3 = st.time_input('end discharge 3 :checkered_flag:',value=time(hour=22, minute=15))
                     SCALE_FUCTOR3_DISCHARGE=st.slider('EV3 discharge multiplier',min_value=0.0,max_value=5.0,value=1.0,step=0.1)
         with car4:
-            st.title('EV4')
+            st.title('EV4 :car:')
             ch4,dis4=st.columns(2)
             with ch4:
                 with st.expander('EV4 Charge'):
-                    start_charge_time4 = st.time_input('start charge time 4',value=time(hour=8, minute=15))
-                    end_charge_time4 = st.time_input('end charge time 4',value=time(hour=17, minute=45))
+                    start_charge_time4 = st.time_input('start charge 4 :clock1:',value=time(hour=8, minute=15))
+                    end_charge_time4 = st.time_input('end charge 4 :checkered_flag:',value=time(hour=17, minute=45))
                     SCALE_FUCTOR4_CHARGE=st.slider('EV4 charge multiplier',min_value=0.0,max_value=5.0,value=1.0,step=0.1)
-                    battery4=st.slider('Initial EV4 Battery LVL',min_value=0.0,max_value=300000.0,value=100000.0,step=1000.0)
+                    battery4=st.slider('Initial EV4 Battery:battery:',min_value=0.0,max_value=300000.0,value=100000.0,step=1000.0)
                     
 
 
             with dis4:
                 with st.expander('EV4 DisCharge'):
-                    start_discharge_time4 = st.time_input('start discahrge time 4',value=time(hour=18, minute=0))
-                    end_discharge_time4 = st.time_input('end discharge time 4',value=time(hour=21, minute=0))
+                    start_discharge_time4 = st.time_input('start discahrge 4 :clock1:',value=time(hour=18, minute=0))
+                    end_discharge_time4 = st.time_input('end discharge 4 :checkered_flag:',value=time(hour=21, minute=0))
                     SCALE_FUCTOR4_DISCHARGE=st.slider('EV4 discharge multiplier',min_value=0.0,max_value=5.0,value=1.0,step=0.1)
         submitted = st.form_submit_button("Submit")
     # Get unique month and day values from the 'day' dataframe
@@ -435,72 +435,74 @@ def main():
     with st.container():
         fig, ax = plt.subplots(figsize=(15,4))
         # Create a line plot
-        with st.form(key='plot'):
-            choices=st.multiselect('Select EV',['Total_EV_Charge (W)','EV1_charge (W)', 'EV2_charge (W)', 'EV3_charge (W)', 'EV4_charge (W)', 
-                                        'Total_EV_DisCharge (W)','EV1_discharge (W)', 'EV2_discharge (W)', 'EV3_discharge (W)', 'EV4_discharge (W)', 
-                                        'PV (W)', 'Total_Imbalance (W)', 'Imbalance (W)'],default=['Total_EV_Charge (W)','EV1_charge (W)', 'EV2_charge (W)', 'EV3_charge (W)', 'EV4_charge (W)', 
-                                        'Total_EV_DisCharge (W)','EV1_discharge (W)', 'EV2_discharge (W)', 'EV3_discharge (W)', 'EV4_discharge (W)', 
-                                        'PV (W)', 'Total_Imbalance (W)', 'Imbalance (W)'])
-            submitted = st.form_submit_button("Submit")
-        unique_df['Total_Imbalance (W)']=unique_df['Imbalance (W)']+unique_df['Total_EV_Charge (W)']+unique_df['Total_EV_DisCharge (W)']
-        sns.lineplot(data=unique_df[choices],
-                                    palette=['#000b5e','#021496','#0119cb','#001be7','#001eff',
-                                            '#ff0000','#ff7100','#ffa900','#ffcb00','#fff800',  
-                                            '#00FF00','#ff00e1','#ad00ff'],ax=ax)
-        
-        plt.title('Electric Vehicle Charging')
-        plt.xlabel('Time')
-        plt.ylabel('Charge (W)')
-        ax.set_xticklabels(ax.get_xticklabels(), rotation=45)
-        plt.legend(loc='lower left',fontsize='x-small')
-        st.pyplot(fig)
-    with st.container():
-        col1,col2,col3=st.columns([2,1,0.9])
-        with col1:
-            fig1, ax1 = plt.subplots()
-            plt.bar(range(len(per_car_charge_list)), per_car_charge_list, color='b')
-            # plot bar chart with discharge values
-            plt.bar(range(len(per_car_discharge_list)), per_car_discharge_list, color='r')
-            # set x-axis labels
-            plt.xticks(range(len(per_car_charge_list)), ['Car 1', 'Car 2', 'Car 3', 'Car 4'])
-            ax1.text(0, per_car_charge_list[0], str(round(per_car_charge_list[0])), ha='center', va='bottom')
-            ax1.text(0, per_car_discharge_list[0], str(round(per_car_discharge_list[0])), ha='center', va='bottom')
-
-            ax1.text(1, per_car_charge_list[1], str(round(per_car_charge_list[1])), ha='center', va='bottom')
-            ax1.text(1, per_car_discharge_list[1], str(round(per_car_discharge_list[1])), ha='center', va='bottom')
-
-            ax1.text(2, per_car_charge_list[2], str(round(per_car_charge_list[2])), ha='center', va='bottom')
-            ax1.text(2, per_car_discharge_list[2], str(round(per_car_discharge_list[2])), ha='center', va='bottom')
-
-            ax1.text(3, per_car_charge_list[3], str(round(per_car_charge_list[3])), ha='center', va='bottom')
-            ax1.text(3, per_car_discharge_list[3], str(round(per_car_discharge_list[3])), ha='center', va='bottom')
-
-            # set y-axis label
-            plt.ylabel('Energy (kWh)')
-            # set title
-            plt.title('Total Energy Exchange for each EVs')
-            # show plot
-            st.pyplot(fig1)
-        with col2:
-            fig2, ax2= plt.subplots(figsize=(4, 7))
-            plt.bar(['Total Discharge', 'Total Charge'], [total_discharge, total_charge], color=['r', 'b'])
-
-            ax2.text(1, total_charge, str(round(total_charge,2)), ha='center', va='bottom')
-            ax2.text(0, total_discharge, str(round(total_discharge,2)), ha='center', va='bottom')
-            plt.ylabel('Energy (kWh)')
-            plt.title('Total Energy exchange all EV')
-            st.pyplot(fig2)
+        with st.expander('Plot :chart_with_upwards_trend:'):
+            with st.form(key='plot'):
+                choices=st.multiselect('Select EV',['Total_EV_Charge (W)','EV1_charge (W)', 'EV2_charge (W)', 'EV3_charge (W)', 'EV4_charge (W)', 
+                                            'Total_EV_DisCharge (W)','EV1_discharge (W)', 'EV2_discharge (W)', 'EV3_discharge (W)', 'EV4_discharge (W)', 
+                                            'PV (W)', 'Total_Imbalance (W)', 'Imbalance (W)'],default=['Total_EV_Charge (W)','EV1_charge (W)', 'EV2_charge (W)', 'EV3_charge (W)', 'EV4_charge (W)', 
+                                            'Total_EV_DisCharge (W)','EV1_discharge (W)', 'EV2_discharge (W)', 'EV3_discharge (W)', 'EV4_discharge (W)', 
+                                            'PV (W)', 'Total_Imbalance (W)', 'Imbalance (W)'])
+                submitted = st.form_submit_button("Submit")
+            unique_df['Total_Imbalance (W)']=unique_df['Imbalance (W)']+unique_df['Total_EV_Charge (W)']+unique_df['Total_EV_DisCharge (W)']
+            sns.lineplot(data=unique_df[choices],
+                                        palette=['#000b5e','#021496','#0119cb','#001be7','#001eff',
+                                                '#ff0000','#ff7100','#ffa900','#ffcb00','#fff800',  
+                                                '#00FF00','#ff00e1','#ad00ff'],ax=ax)
             
-            good_energy_count,bad_energy_count,total_EV_demand_count,per_car_count_list=count_positive_charge_negative_imbalance(unique_df)
-        with col3:
-            st.pyplot(plot_pie_chart(["PVs","From Grid"],[good_energy_count,bad_energy_count]))
-        
+            plt.title('Electric Vehicle Charging')
+            plt.xlabel('Time')
+            plt.ylabel('Charge (W)')
+            ax.set_xticklabels(ax.get_xticklabels(), rotation=45)
+            plt.legend(loc='lower left',fontsize='x-small')
+            st.pyplot(fig)
+    with st.container():
+        with st.expander('Daily Energy Exchange Analysis :clipboard:'):
+            col1,col2,col3=st.columns([2,1,0.9])
+            with col1:
+                fig1, ax1 = plt.subplots()
+                plt.bar(range(len(per_car_charge_list)), per_car_charge_list, color='b')
+                # plot bar chart with discharge values
+                plt.bar(range(len(per_car_discharge_list)), per_car_discharge_list, color='r')
+                # set x-axis labels
+                plt.xticks(range(len(per_car_charge_list)), ['Car 1', 'Car 2', 'Car 3', 'Car 4'])
+                ax1.text(0, per_car_charge_list[0], str(round(per_car_charge_list[0])), ha='center', va='bottom')
+                ax1.text(0, per_car_discharge_list[0], str(round(per_car_discharge_list[0])), ha='center', va='bottom')
+
+                ax1.text(1, per_car_charge_list[1], str(round(per_car_charge_list[1])), ha='center', va='bottom')
+                ax1.text(1, per_car_discharge_list[1], str(round(per_car_discharge_list[1])), ha='center', va='bottom')
+
+                ax1.text(2, per_car_charge_list[2], str(round(per_car_charge_list[2])), ha='center', va='bottom')
+                ax1.text(2, per_car_discharge_list[2], str(round(per_car_discharge_list[2])), ha='center', va='bottom')
+
+                ax1.text(3, per_car_charge_list[3], str(round(per_car_charge_list[3])), ha='center', va='bottom')
+                ax1.text(3, per_car_discharge_list[3], str(round(per_car_discharge_list[3])), ha='center', va='bottom')
+
+                # set y-axis label
+                plt.ylabel('Energy (kWh)')
+                # set title
+                plt.title('Total Energy Exchange for each EVs')
+                # show plot
+                st.pyplot(fig1)
+            with col2:
+                fig2, ax2= plt.subplots(figsize=(4, 7))
+                plt.bar(['Total Discharge', 'Total Charge'], [total_discharge, total_charge], color=['r', 'b'])
+
+                ax2.text(1, total_charge, str(round(total_charge,2)), ha='center', va='bottom')
+                ax2.text(0, total_discharge, str(round(total_discharge,2)), ha='center', va='bottom')
+                plt.ylabel('Energy (kWh)')
+                plt.title('Total Energy exchange all EV')
+                st.pyplot(fig2)
+                
+                good_energy_count,bad_energy_count,total_EV_demand_count,per_car_count_list=count_positive_charge_negative_imbalance(unique_df)
+            with col3:
+                st.pyplot(plot_pie_chart(["PVs","From Grid"],[good_energy_count,bad_energy_count]))
+            
         starting_car_capacity_list=[battery1,battery2,battery3,battery4]
         calculate_energy_storage(unique_df,4,starting_car_capacity_list)
         
             
             
-        with st.expander('Battery Level 1'):
+        with st.expander(':battery: Battery 1'):
             c11,c13 = st.columns([1,3])
             with c11:
                 st.subheader('Start')
@@ -525,7 +527,7 @@ def main():
                 ax.set_title(f'EV{1}')
                 st.pyplot(fig)
                 st.write('------------------------------------')
-        with st.expander('Battery Level 2'):
+        with st.expander(':battery: Battery 2'):
             c21,c23 = st.columns([1,3])
             with c21:
                 st.subheader('Start')
@@ -549,7 +551,7 @@ def main():
                 ax.set_title(f'EV{2}')
                 st.pyplot(fig) 
             st.write('------------------------------------')
-        with st.expander('Battery Level 3'):
+        with st.expander(':battery: Battery 3'):
             c31,c33 = st.columns([1,3])
             with c31:
                 st.subheader('Start')
@@ -573,7 +575,7 @@ def main():
                 ax.set_title(f'EV{3}')
                 st.pyplot(fig) 
             st.write('------------------------------------')
-        with st.expander('Battery Level 4'):
+        with st.expander(':battery: Battery 4'):
             c41,c43 = st.columns([1,3])
             with c41:
                 st.subheader('Start')
@@ -627,8 +629,8 @@ if __name__ == '__main__':
      sns.set(style="darkgrid")
      st. set_page_config(layout="wide")
      st.title('EV Charging and Discharging Planner for a day')
-     DAY=st.selectbox('Select Day',range(1,322))
-     MAXIMUM_CAR_CAPACITY=st.number_input('MaximumCarCapacity',min_value=0,max_value=300000,value=300000,step=10000,key="max_car_cap_input")
+     DAY=st.selectbox('Select Day :calendar:',range(1,322))
+     MAXIMUM_CAR_CAPACITY=st.number_input('MaximumCarCapacity :battery:',min_value=0,max_value=300000,value=300000,step=10000,key="max_car_cap_input")
      
      main()
      
