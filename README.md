@@ -1,6 +1,6 @@
-# Project Name
+# Daily Ev Planner
 
-Include the name of your project and a brief description of what it does.
+The 'Daily Ev Planner' is a software tool that allows users to manage the charging and discharging behavior of up to four electric vehicles (EVs) in a streamlined and user-friendly way. With features such as a plot tool, daily power exchange analysis, and battery view, users can easily visualize and analyze the performance of their EVs over time. The tool is designed to help users optimize system performance and efficiency by providing a comprehensive view of the charging and discharging behavior of their EVs.
 
 ## Table of Contents
 
@@ -13,11 +13,47 @@ Include the name of your project and a brief description of what it does.
 
 ## Installation
 
-Include instructions on how to install your project. This could be a list of command-line instructions or a link to a package manager like npm or pip.
+1. Clone the repository to your local machine using the following command:
+    
+    ```bash
+    
+    git clone https://github.com/SteDiamant/streamlitProject
+    
+    ```
+    
+2. Navigate to the project directory:
+    
+    ```bash
+    
+    cd streamlitProject
+    
+    ```
+    
+3. Install the required Python packages using pip:
+    
+    ```python
+    
+    pip install -r requirements.txt
+    
+    ```
+    
+4. Run the application using Streamlit:
+    
+    ```python
+    
+    streamlit run app.py
+    ```
 
 ## Usage
+ 
+To use the EV Charging and Discharging Controller, you have two options:
 
-Include instructions on how to use your project. This could be a list of command-line instructions or a description of how to use a user interface.
+1. Clone the repository and install the application on your local machine. Follow the installation instructions to run the app on your local network.
+2. Access the online version hosted on Streamlit Cloud by going to the following link: <br> 
+https://stediamant-streamlitproject-home-fhhcal.streamlit.app/DailyEVPlanner
+
+
+
 
 ## Features
 
