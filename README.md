@@ -42,10 +42,10 @@ $$\text{TotalDemand (W)} = \text{General Demand (W)} + \text{Heating Demand (W)}
 
 $$\text{Imbalance (W)} = \text{TotalDemand (W)} + \text{PV (W)}*Number\_PVs$$
 
-$$\text{Total\_EV\_Charge (W)}={Total\_EV\_Charge\_1 (W)} + {Total\_EV\_Charge\_2 (W)} +{Total\_EV\_Charge\_3 (W)}+{Total\_EV\_Charge\_4 (W)}  $$
-$$\text{Total\_EV\_DisCharge (W)}={Total\_EV\_DisCharge\_1 (W)} + {Total\_EVDisCharge\_2 (W)} +{Total\_EV\_DisCharge\_3 (W)}+{Total\_EV\_DisCharge\_4 (W)}  $$
+$$\text{TotalEVCharge (W)}={TotalEVCharge\_1 (W)} + {TotalEVCharge\_2 (W)} +{TotalEVCharge\_3 (W)}+{TotalEVCharge\_4 (W)}  $$
+$$\text{TotalEVDisCharge (W)}={TotalEVDisCharge\_1 (W)} + {TotalEVDisCharge\_2 (W)} +{TotalEVDisCharge\_3 (W)}+{TotalEVDisCharge\_4 (W)}  $$
 
-$$\text{Total\_Imbalance (W)} = \text{Imbalance (W)} + \text{Total\_EV\_Charge (W)} + \text{Total\_EV\_DisCharge (W)}$$
+$$\text{TotalImbalance (W)} = \text{Imbalance (W)} + \text{TotalEVCharge (W)} + \text{Total EVDisCharge (W)}$$
 
 The multiselect dropdown menu enables users to select the EVs they wish to view on the plot, providing a customizable and user-friendly experience. By allowing users to select specific EVs, they can focus on the vehicles that are most relevant to them, saving time and improving productivity.
 ![dropDown](imgs/DropDown.png)
