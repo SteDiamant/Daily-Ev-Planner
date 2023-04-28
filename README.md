@@ -122,20 +122,41 @@ The 'BatteryView' creates 4 expanders that display the battery level of 4 differ
 
 Each expander consists of two columns, where the left column shows the starting and ending battery level of the charging session for the corresponding EV, while the right column displays a graph of the battery level over time.
 
-![battery1](imgs/battey1.png)
+![battery1](imgs/battery1.png)
+
+The pie chart that shows the proportion of energy coming from photovoltaics (PVs) and from the grid.
 
 The graph has two areas: one area represents the energy charged from green sources, while the other represents energy charged from non-green sources. 
 
 There are blue horizontal lines on the graph that indicate the battery capacity levels of the EV (20%, 80%, and 100%), and a red horizontal line indicating the maximum battery capacity of the EV. 
 
-## Contributing
-
-Include instructions on how people can contribute to your project. This could include instructions on how to submit bug reports or feature requests, how to create pull requests, or how to contact you for help.
 
 ## Credits
+This modelling tool was developed by Stelios Diamantopoulos for the purpose of Microgrid Modeling for Saxion University Of Applied Science Sustainability lab. The project was supervised by Professor Rita Garcia Peran.\
 
-List any resources you used to create your project, such as libraries or tutorials.
+The following individuals also contributed to the development of the tool:
 
+
+Edmund Schaefer and Victor, who assisted with data collection, analysis and provided feedback for the development process.
+
+I would like to thank everyone who contributed to this project and made it possible. This tool is released under the Apache License, Version 2.0, and we encourage others to build upon our work and continue to advance the field of microgrid modeling.
+
+## Future Work
+
+- Creating a database: 
+
+    Currently, the tool reads data from CSV files, which can be time-consuming and may not scale well for larger datasets. In the future, it would be beneficial to integrate the tool with a database such as MongoDB or Snowflake to allow for faster and more efficient data storage and retrieval.
+
+- Battery limitations:
+
+     The current version of the tool generates charge and discharge profiles without taking into account the maximum capacity of the battery. In future versions, we could consider incorporating this limitation into the model.
+     - One approach would be to generate profiles that are within the battery capacity limits, by adjusting the generation algorithm to take the maximum capacity into account.
+     - Alternatively, create a function that corrects the generated profiles to ensure they are within the capacity limits (0, MAXIMUM_CAR_CAPACITY). 
 ## License
 
-Include information about the license for your project. This could be a link to a license file or a description of the license your project uses.
+This project is licensed under the Apache License, Version 2.0 (the "License"); you may not use this file except in compliance with the License. You may obtain a copy of the License at:
+
+    http://www.apache.org/licenses/LICENSE-2.0
+
+Unless required by applicable law or agreed to in writing, software distributed under the License is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the License for the specific language governing permissions and limitations under the License.
+
