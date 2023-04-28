@@ -42,82 +42,86 @@ class HtmlGenerator():
         
         # Set the height of the #charge div based on the charge percentage
         charge_height = round(charge_percentage * 100, 2)
-        
-        # Replace the placeholder {value} in the HTML code with the actual value and charge height
-        html_code = f"""
-        
-        <html lang="en">
-        <head>
-            <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-            <title>Detect Battery Status</title>
-            <!-- Google Fonts -->
-            <link href="https://fonts.googleapis.com/css2?family=Roboto+Mono:wght@400;500&display=swap" rel="stylesheet" />
-            <!-- Stylesheet -->
-            <style>
-                /* CSS code for battery status interface */
+        if charge_height > 100:
+            st.error("The battery capacity cannot be more than 100%")
+        elif charge_height < 0:
+            st.error("The battery capacity cannot be less than 0%")
+        else:
+            # Replace the placeholder {value} in the HTML code with the actual value and charge height
+            html_code = f"""
+            
+            <html lang="en">
+            <head>
+                <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+                <title>Detect Battery Status</title>
+                <!-- Google Fonts -->
+                <link href="https://fonts.googleapis.com/css2?family=Roboto+Mono:wght@400;500&display=swap" rel="stylesheet" />
+                <!-- Stylesheet -->
+                <style>
+                    /* CSS code for battery status interface */
 
-                
-                .container {{
-                    width: 300px;
-                    margin: 50px auto;
-                    text-align: center;
-                }}
-
-                #battery {{
-                    position: relative;
-                    margin: 20px auto;
-                    width: 80px;
-                    height: 120px;
-                    border-radius: 10px;
-                    border: 5px solid #333;
-                }}
-
-                #charge{id} {{
-                    position: absolute;
-                    bottom: 0;
-                    width: 100%;
                     
-                    background-color: #ff9800;
-                    border-radius: 0 0 10px 10px;
-                }}
+                    .container {{
+                        width: 300px;
+                        margin: 50px auto;
+                        text-align: center;
+                    }}
 
-                #charge-level {{
-                    margin-top: -50px;
-                    font-family: 'Roboto Mono', monospace;
-                    font-size: 24px;
-                    font-weight: 500;
-                    color: #333;
-                }}
+                    #battery {{
+                        position: relative;
+                        margin: 20px auto;
+                        width: 80px;
+                        height: 120px;
+                        border-radius: 10px;
+                        border: 5px solid #333;
+                    }}
 
-                #charging-time {{
-                    font-family: 'Roboto Mono', monospace;
-                    font-size: 18px;
-                    color: #333;
-                }}
-            </style>
-            </head>
-            <body>
-                <div class="container{id}">
-                    <div id="charge-level{id}">
+                    #charge{id} {{
+                        position: absolute;
+                        bottom: 0;
+                        width: 100%;
                         
-                        <h3>Car{id} Battery Level</h3>
-                        <div id="battery">
-                            <div id="charge-level">{charge_height}%<br>
-                                <div id="charge{id}" style="height:{charge_height}%;">
-                                
+                        background-color: #ff9800;
+                        border-radius: 0 0 10px 10px;
+                    }}
+
+                    #charge-level {{
+                        margin-top: -50px;
+                        font-family: 'Roboto Mono', monospace;
+                        font-size: 24px;
+                        font-weight: 500;
+                        color: #333;
+                    }}
+
+                    #charging-time {{
+                        font-family: 'Roboto Mono', monospace;
+                        font-size: 18px;
+                        color: #333;
+                    }}
+                </style>
+                </head>
+                <body>
+                    <div class="container{id}">
+                        <div id="charge-level{id}">
+                            
+                            <h3>Car{id} Battery Level</h3>
+                            <div id="battery">
+                                <div id="charge-level">{charge_height}%<br>
+                                    <div id="charge{id}" style="height:{charge_height}%;">
+                                    
+                                    </div>
                                 </div>
                             </div>
                         </div>
                     </div>
-                </div>
-            </body>
+                </body>
 
-        </html>
-        """
-        
-        
-        markdown_code = convert(html_code)
-        return markdown_code
+            </html>
+            """
+            
+            
+            markdown_code = convert(html_code)
+            return markdown_code
 
 
 class ProfileGenerator:
@@ -278,11 +282,11 @@ def save_info(start_charge_time1,end_charge_time1,
 
 def plot_pie_chart(labels, values):
     fig, ax = plt.subplots()
-    plt.title('Energy Origin Perchentage used for charging EVs')
+    plt.title('Energy Origin Perchentage \n used for charging EVs')
     ax.pie(values, labels=labels, autopct='%1.1f%%',colors=('g','r'))
     
     ax.set_aspect('equal')
-    plt.show()
+    
     return fig
 
 def calculate_energy_storage(df,MAX_CO_CARS,STARTING_CAR_CAPACITY):
@@ -503,7 +507,7 @@ def main():
             
             
         with st.expander(':battery: Battery 1'):
-            c11,c13 = st.columns([1,3])
+            c11,c12,c13 = st.columns([1,1,3])
             with c11:
                 st.subheader('Start')
                 car1_battery_lvl1 = unique_df['BatteryLVL1'][1]
@@ -514,21 +518,28 @@ def main():
                 car1_battery_lvl11 = unique_df['BatteryLVL1'][-1]
                 car1_html11=HtmlGenerator.battery_lvl1(1,car1_battery_lvl11)
                 st.markdown(car1_html11, unsafe_allow_html=True)
+            with c12:
+                fig12,ax12=plt.subplots(figsize=(1,1))
+                count_g1=unique_df[(unique_df['EV1_charge (W)'] > 0) & (unique_df['Total_Imbalance (W)'] < 0)]['BatteryLVL1'].count()
+                count_1=unique_df[(unique_df['EV1_charge (W)'] > 0) & (unique_df['Total_Imbalance (W)'] > 0)]['BatteryLVL1'].count()
+                fig22=(plot_pie_chart(['Green','Red'],[count_g1,count_1]))
+                st.pyplot(fig22)
             with c13:
                 fig,ax=plt.subplots(figsize=(10,2))
-                ax.stackplot(unique_df.index, unique_df['BatteryLVL1'], color='g')
-                unique_df['EV1_green_energy'] = unique_df[(unique_df['EV1_charge (W)'] >= 0) & (unique_df['Total_Imbalance (W)'] > 0)]['BatteryLVL1']
+                ax.stackplot(unique_df.index, unique_df['BatteryLVL1'], color='r')
+                unique_df['EV1_green_energy'] = unique_df[(unique_df['EV1_charge (W)'] > 0) & (unique_df['Total_Imbalance (W)'] < 0)]['BatteryLVL1']
                 
-                ax.stackplot(unique_df.index, unique_df['EV1_green_energy'], color='r')
+                ax.stackplot(unique_df.index, unique_df['EV1_green_energy'], color='g')
                 ax.axhline(y=MAXIMUM_CAR_CAPACITY, xmin=0, xmax=1, color='blue', linestyle='-',label='Maximum Capacity')
                 ax.axhline(y=MAXIMUM_CAR_CAPACITY*0.8, xmin=0, xmax=1, color='blue', linestyle='--',label='80% Capacity%')
                 ax.axhline(y=MAXIMUM_CAR_CAPACITY*0.2, xmin=0, xmax=1, color='blue', linestyle='--',label='20% Capacity')
                 ax.axhline(y=0, xmin=0, xmax=1, color='blue', linestyle='--',label='Minimum Capacity')
                 ax.set_title(f'EV{1}')
                 st.pyplot(fig)
+                
                 st.write('------------------------------------')
         with st.expander(':battery: Battery 2'):
-            c21,c23 = st.columns([1,3])
+            c21,c22,c23 = st.columns([1,1,3])
             with c21:
                 st.subheader('Start')
                 car1_battery_lvl2 = unique_df['BatteryLVL2'][1]
@@ -539,11 +550,17 @@ def main():
                 car1_battery_lvl12 = unique_df['BatteryLVL2'][-1]
                 car1_html12=HtmlGenerator.battery_lvl1(1,car1_battery_lvl12)
                 st.markdown(car1_html12, unsafe_allow_html=True)
+            with c22:
+                fig22,ax22=plt.subplots(figsize=(1,1))
+                count_g2=unique_df[(unique_df['EV2_charge (W)'] > 0) & (unique_df['Total_Imbalance (W)'] < 0)]['BatteryLVL2'].count()
+                count_2=unique_df[(unique_df['EV2_charge (W)'] > 0) & (unique_df['Total_Imbalance (W)'] > 0)]['BatteryLVL2'].count()
+                fig22=(plot_pie_chart(['Green','Red'],[count_g2,count_2]))
+                st.pyplot(fig22)
             with c23:
                 fig,ax=plt.subplots(figsize=(10,2))
-                ax.stackplot(unique_df.index, unique_df['BatteryLVL2'], color='g')
-                unique_df['EV2_green_energy'] = unique_df[(unique_df['EV2_charge (W)'] >= 0) & (unique_df['Total_Imbalance (W)'] > 0)]['BatteryLVL2']
-                ax.stackplot(unique_df.index, unique_df['EV2_green_energy'], color='r')
+                ax.stackplot(unique_df.index, unique_df['BatteryLVL2'], color='r')
+                unique_df['EV2_green_energy'] = unique_df[(unique_df['EV2_charge (W)'] > 0) & (unique_df['Total_Imbalance (W)'] < 0)]['BatteryLVL2']
+                ax.stackplot(unique_df.index, unique_df['EV2_green_energy'], color='g')
                 ax.axhline(y=MAXIMUM_CAR_CAPACITY, xmin=0, xmax=1, color='blue', linestyle='-',label='Maximum Capacity')
                 ax.axhline(y=MAXIMUM_CAR_CAPACITY*0.8, xmin=0, xmax=1, color='blue', linestyle='--',label='80% Capacity%')
                 ax.axhline(y=MAXIMUM_CAR_CAPACITY*0.2, xmin=0, xmax=1, color='blue', linestyle='--',label='20% Capacity')
@@ -552,7 +569,7 @@ def main():
                 st.pyplot(fig) 
             st.write('------------------------------------')
         with st.expander(':battery: Battery 3'):
-            c31,c33 = st.columns([1,3])
+            c31,c32,c33 = st.columns([1,1,3])
             with c31:
                 st.subheader('Start')
                 car1_battery_lvl3 = unique_df['BatteryLVL1'][1]
@@ -563,11 +580,18 @@ def main():
                 car1_battery_lvl13 = unique_df['BatteryLVL3'][-1]
                 car1_html13=HtmlGenerator.battery_lvl1(1,car1_battery_lvl13)
                 st.markdown(car1_html13, unsafe_allow_html=True)
+            with c32:
+                fig32,ax32=plt.subplots(figsize=(1,1))
+                count_g3=unique_df[(unique_df['EV3_charge (W)'] > 0) & (unique_df['Total_Imbalance (W)'] < 0)]['BatteryLVL3'].count()
+                count_3=unique_df[(unique_df['EV3_charge (W)'] > 0) & (unique_df['Total_Imbalance (W)'] > 0)]['BatteryLVL3'].count()
+                fig32=(plot_pie_chart(['Green','Red'],[count_g3,count_3]))
+                st.pyplot(fig32)
+            
             with c33:
                 fig,ax=plt.subplots(figsize=(10,2))
-                ax.stackplot(unique_df.index, unique_df['BatteryLVL3'], color='g')
-                unique_df['EV3_green_energy'] = unique_df[(unique_df['EV3_charge (W)'] >= 0) & (unique_df['Total_Imbalance (W)'] > 0)]['BatteryLVL3']
-                ax.stackplot(unique_df.index, unique_df['EV3_green_energy'], color='r')
+                ax.stackplot(unique_df.index, unique_df['BatteryLVL3'], color='r')
+                unique_df['EV3_green_energy'] = unique_df[(unique_df['EV3_charge (W)'] > 0) & (unique_df['Total_Imbalance (W)'] < 0)]['BatteryLVL3']
+                ax.stackplot(unique_df.index, unique_df['EV3_green_energy'], color='g')
                 ax.axhline(y=MAXIMUM_CAR_CAPACITY, xmin=0, xmax=1, color='r', linestyle='-',label='Maximum Capacity')
                 ax.axhline(y=MAXIMUM_CAR_CAPACITY*0.8, xmin=0, xmax=1, color='blue', linestyle='--',label='80% Capacity%')
                 ax.axhline(y=MAXIMUM_CAR_CAPACITY*0.2, xmin=0, xmax=1, color='blue', linestyle='--',label='20% Capacity')
@@ -576,7 +600,7 @@ def main():
                 st.pyplot(fig) 
             st.write('------------------------------------')
         with st.expander(':battery: Battery 4'):
-            c41,c43 = st.columns([1,3])
+            c41,c42,c43 = st.columns([1,1,3])
             with c41:
                 st.subheader('Start')
                 car1_battery_lvl1 = unique_df['BatteryLVL4'][1]
@@ -587,17 +611,26 @@ def main():
                 car1_battery_lvl11 = unique_df['BatteryLVL4'][-1]
                 car1_html11=HtmlGenerator.battery_lvl1(1,car1_battery_lvl11)
                 st.markdown(car1_html11, unsafe_allow_html=True)
+            with c42:
+                fig42,ax42=plt.subplots(figsize=(1,1))
+                count_g4=unique_df[(unique_df['EV4_charge (W)'] > 0) & (unique_df['Total_Imbalance (W)'] < 0)]['BatteryLVL4'].count()
+                count_4=unique_df[(unique_df['EV4_charge (W)'] > 0) & (unique_df['Total_Imbalance (W)'] > 0)]['BatteryLVL4'].count()
+                fig42=(plot_pie_chart(['Green','Red'],[count_g4,count_4]))
+                st.pyplot(fig42)
             with c43:
-                fig,ax=plt.subplots(figsize=(10,2))
-                ax.stackplot(unique_df.index, unique_df['BatteryLVL4'], color='g')
-                unique_df['EV4_green_energy'] = unique_df[(unique_df['EV4_charge (W)'] >= 0) & (unique_df['Total_Imbalance (W)'] > 0)]['BatteryLVL4']
-                ax.stackplot(unique_df.index, unique_df['EV4_green_energy'], color='r')
+                fig,ax=plt.subplots(figsize=(10,3))
+                ax.stackplot(unique_df.index, unique_df['BatteryLVL4'], color='r')
+                unique_df['EV4_green_energy'] = unique_df[(unique_df['EV4_charge (W)'] > 0) & (unique_df['Total_Imbalance (W)'] < 0)]['BatteryLVL4']
+                ax.stackplot(unique_df.index, unique_df['EV4_green_energy'], color='g')
                 ax.axhline(y=MAXIMUM_CAR_CAPACITY, xmin=0, xmax=1, color='blue', linestyle='-',label='Maximum Capacity')
                 ax.axhline(y=MAXIMUM_CAR_CAPACITY*0.8, xmin=0, xmax=1, color='blue', linestyle='--',label='80% Capacity%')
                 ax.axhline(y=MAXIMUM_CAR_CAPACITY*0.2, xmin=0, xmax=1, color='blue', linestyle='--',label='20% Capacity')
                 ax.axhline(y=0, xmin=0, xmax=1, color='blue', linestyle='--',label='Minimum Capacity')
                 ax.set_title(f'EV{4}')
+                
+                
                 st.pyplot(fig) 
+                
             st.write('------------------------------------')
             
         download= st.download_button(
