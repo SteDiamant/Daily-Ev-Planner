@@ -151,7 +151,10 @@ I would like to thank everyone who contributed to this project and made it possi
 
      The current version of the tool generates charge and discharge profiles without taking into account the maximum capacity of the battery. In future versions, we could consider incorporating this limitation into the model.
      - One approach would be to generate profiles that are within the battery capacity limits, by adjusting the generation algorithm to take the maximum capacity into account.
-     - Alternatively, create a function that corrects the generated profiles to ensure they are within the capacity limits (0, MAXIMUM_CAR_CAPACITY). 
+     - Alternatively, create a function that corrects the generated profiles to ensure they are within the capacity limits (0, MAXIMUM_CAR_CAPACITY).
+     
+- Between charge and discharge timestamps the car has to drive certain amount of km in order to reach destination . For every car a slider can be created that will determine the travel distance between charge and discharge in km and will reduce battery capacity accordingly.
+- Better Functions for plotting maybe create a Plotter class instead of generating the plots into the main function
 ## License
 
 This project is licensed under the Apache License, Version 2.0 (the "License"); you may not use this file except in compliance with the License. You may obtain a copy of the License at:
