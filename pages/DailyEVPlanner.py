@@ -125,10 +125,17 @@ class HtmlGenerator():
 
 
 class ProfileGenerator:
-    def crete_charge_profile(df,start_time,end_time,start_date,end_date,id,scale_factor) :
+    def crete_charge_profile(df,start_time,end_time,start_date,end_date,id,scale_factor,initial_charge) :
         date_range = pd.date_range(start=datetime.combine(start_date, start_time), end=datetime.combine(end_date, end_time), freq='15min')
         charge_profile = pd.DataFrame(index=date_range)
-        charge_profile[f'EV{id}_charge (W)'] = pd.Series(data=scale_factor*np.random.randint(low=6400, high=7000, size=len(date_range)), index=charge_profile.index)
+        charge_values=scale_factor*np.random.randint(low=6400, high=7000, size=len(date_range))
+        sum_values=charge_values.sum()
+        i=1
+        while sum_values > MAXIMUM_CAR_CAPACITY-initial_charge:
+            charge_values[-i] = 0
+            sum_values=charge_values.sum()
+            i=i+1
+        charge_profile[f'EV{id}_charge (W)'] = pd.Series(data=charge_values, index=charge_profile.index)
         
         charge_profile.index.name = 'Time'
         
@@ -137,9 +144,14 @@ class ProfileGenerator:
     def crete_discharge_profile(df,start_time,end_time,start_date,end_date,id,scale_factor):
         date_range = pd.date_range(start=datetime.combine(start_date, start_time), end=datetime.combine(end_date, end_time), freq='15min')
         discharge_profile = pd.DataFrame(index=date_range)
-        discharge_profile[f'EV{id}_discharge (W)'] = pd.Series(data=scale_factor*np.random.randint(low=-7000, high=-6400, size=len(date_range)), index=discharge_profile.index)
-        
-
+        discharge_values=scale_factor*np.random.randint(low=-7000, high=-6400, size=len(date_range))
+        sum_values=discharge_values.sum()
+        i=1
+        while abs(sum_values) > 0.8*(MAXIMUM_CAR_CAPACITY):
+            discharge_values[-i] = 0
+            sum_values=discharge_values.sum()
+            i+=1
+        discharge_profile[f'EV{id}_discharge (W)'] = pd.Series(data=discharge_values, index=discharge_profile.index)
         discharge_profile.index.name = 'Time'
         
         return discharge_profile
@@ -165,7 +177,7 @@ class MergeProfiles:
         return merged_df
     
 
-def create_day_charge_profile(day, start_charge_times, end_charge_times,SCALE_FACTORS_CHARGE):
+def create_day_charge_profile(day, start_charge_times, end_charge_times,SCALE_FACTORS_CHARGE,initial_charge):
     # Get unique month and day values from the 'day' dataframe
     __get__month = int(day['Month'].unique()[0])  # use index 0 to get the first (and only) element
     __get__day = int(day['DayOfMonth'].unique()[0])
@@ -175,10 +187,10 @@ def create_day_charge_profile(day, start_charge_times, end_charge_times,SCALE_FA
     end_date = start_date  # set end date equal to start date
 
     # Create charge profiles for all four EVs
-    ev1 = ProfileGenerator.crete_charge_profile(day, start_charge_times[0], end_charge_times[0], start_date, end_date, id=1, scale_factor=SCALE_FACTORS_CHARGE[0])
-    ev2 = ProfileGenerator.crete_charge_profile(day, start_charge_times[1], end_charge_times[1], start_date, end_date, id=2, scale_factor=SCALE_FACTORS_CHARGE[1])
-    ev3 = ProfileGenerator.crete_charge_profile(day, start_charge_times[2], end_charge_times[2], start_date, end_date, id=3, scale_factor=SCALE_FACTORS_CHARGE[2])
-    ev4 = ProfileGenerator.crete_charge_profile(day, start_charge_times[3], end_charge_times[3], start_date, end_date, id=4, scale_factor=SCALE_FACTORS_CHARGE[3])
+    ev1 = ProfileGenerator.crete_charge_profile(day, start_charge_times[0], end_charge_times[0], start_date, end_date, id=1, scale_factor=SCALE_FACTORS_CHARGE[0],initial_charge=initial_charge[0])
+    ev2 = ProfileGenerator.crete_charge_profile(day, start_charge_times[1], end_charge_times[1], start_date, end_date, id=2, scale_factor=SCALE_FACTORS_CHARGE[1],initial_charge=initial_charge[1])
+    ev3 = ProfileGenerator.crete_charge_profile(day, start_charge_times[2], end_charge_times[2], start_date, end_date, id=3, scale_factor=SCALE_FACTORS_CHARGE[2],initial_charge=initial_charge[2])
+    ev4 = ProfileGenerator.crete_charge_profile(day, start_charge_times[3], end_charge_times[3], start_date, end_date, id=4, scale_factor=SCALE_FACTORS_CHARGE[3],initial_charge=initial_charge[3])
 
     # Merge the charge profiles into a single dataframe
     charge_data = pd.concat([ev1, ev2, ev3, ev4], axis=1)
@@ -419,7 +431,8 @@ def main():
     
     merged_df = create_day_charge_profile(day,  [start_charge_time1, start_charge_time2, start_charge_time3, start_charge_time4],
                                                 [end_charge_time1, end_charge_time2, end_charge_time3, end_charge_time4],
-                                                [SCALE_FACTOR1_CHARGE,SCALE_FUCTOR2_CHARGE,SCALE_FUCTOR3_CHARGE,SCALE_FUCTOR4_CHARGE])
+                                                [SCALE_FACTOR1_CHARGE,SCALE_FUCTOR2_CHARGE,SCALE_FUCTOR3_CHARGE,SCALE_FUCTOR4_CHARGE],
+                                                [battery1,battery2,battery3,battery4])
     
     merged_df1 = create_day_discharge_profile(day,  [start_discharge_time1, start_discharge_time2, start_discharge_time3, start_discharge_time4],
                                                     [end_discharge_time1, end_discharge_time2, end_discharge_time3, end_discharge_time4],
@@ -633,25 +646,25 @@ def main():
                 
             st.write('------------------------------------')
             
-        download= st.download_button(
-            data=convert_df(unique_df),
-            file_name=f"""EV_Profile{DAY}.csv""",
-            label="Download data as CSV",
-            key='download',on_click=save_info(start_charge_time1,end_charge_time1,
-                                            start_charge_time2,end_charge_time2,
-                                            start_charge_time3,end_charge_time3,
-                                            start_charge_time4,end_charge_time4,
-                                            start_discharge_time1,end_discharge_time1,
-                                            end_discharge_time2,end_discharge_time2,
-                                            start_discharge_time3,end_discharge_time3,
-                                            start_discharge_time4,end_discharge_time4,
-                                            DAY,
-                                            SCALE_FACTOR1_CHARGE,SCALE_FUCTOR2_CHARGE,
-                                            SCALE_FUCTOR3_CHARGE,SCALE_FUCTOR4_CHARGE,
-                                            SCALE_FACTOR1_DISHCARGE,SCALE_FUCTOR2_DISCHARGE,
-                                            SCALE_FUCTOR3_DISCHARGE,SCALE_FUCTOR4_DISCHARGE))
-        if download:
-            st.success('Downloaded')
+        # download= st.download_button(
+        #     data=convert_df(unique_df),
+        #     file_name=f"""EV_Profile{DAY}.csv""",
+        #     label="Download data as CSV",
+        #     key='download',on_click=save_info(start_charge_time1,end_charge_time1,
+        #                                     start_charge_time2,end_charge_time2,
+        #                                     start_charge_time3,end_charge_time3,
+        #                                     start_charge_time4,end_charge_time4,
+        #                                     start_discharge_time1,end_discharge_time1,
+        #                                     end_discharge_time2,end_discharge_time2,
+        #                                     start_discharge_time3,end_discharge_time3,
+        #                                     start_discharge_time4,end_discharge_time4,
+        #                                     DAY,
+        #                                     SCALE_FACTOR1_CHARGE,SCALE_FUCTOR2_CHARGE,
+        #                                     SCALE_FUCTOR3_CHARGE,SCALE_FUCTOR4_CHARGE,
+        #                                     SCALE_FACTOR1_DISHCARGE,SCALE_FUCTOR2_DISCHARGE,
+        #                                     SCALE_FUCTOR3_DISCHARGE,SCALE_FUCTOR4_DISCHARGE))
+        # if download:
+        #     st.success('Downloaded')
         
             
             
