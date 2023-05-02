@@ -76,10 +76,10 @@ The "Plot Tool" feature provides users with a convenient and efficient way to vi
 Additionally, the plot includes information such as the `PV (W)` output, `Imbalance (W)`, and `Total_Imbalance (W)`, allowing users to gain a comprehensive understanding of the system's overall performance.
 $$\text{TotalDemand (W)} = \text{General Demand (W)} + \text{Heating Demand (W)}$$
 
-$$\text{Imbalance (W)} = \text{TotalDemand (W)} + \text{PV (W)}*Number\_PVs$$
+$$\text{Imbalance (W)} = \text{TotalDemand (W)} + \text{PV (W)}*NumberPV$$
 
-$$\text{TotalEVCharge (W)}={TotalEVCharge\_1 (W)} + {TotalEVCharge\_2 (W)} +{TotalEVCharge\_3 (W)}+{TotalEVCharge\_4 (W)}  $$
-$$\text{TotalEVDisCharge (W)}={TotalEVDisCharge\_1 (W)} + {TotalEVDisCharge\_2 (W)} +{TotalEVDisCharge\_3 (W)}+{TotalEVDisCharge\_4 (W)}  $$
+$$\text{TotalEVCharge (W)}={TotalEVCharge_1 (W)} + {TotalEVCharge_2 (W)} +{TotalEVCharge_3 (W)}+{TotalEVCharge_4 (W)}  $$
+$$\text{TotalEVDisCharge (W)}={TotalEVDisCharge_1 (W)} + {TotalEVDisCharge_2 (W)} +{TotalEVDisCharge_3 (W)}+{TotalEVDisCharge_4 (W)}  $$
 
 $$\text{TotalImbalance (W)} = \text{Imbalance (W)} + \text{TotalEVCharge (W)} + \text{Total EVDisCharge (W)}$$
 

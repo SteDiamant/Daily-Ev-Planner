@@ -677,6 +677,6 @@ if __name__ == '__main__':
      st.title('EV Charging and Discharging Planner for a day')
      DAY=st.selectbox('Select Day :calendar:',range(1,322))
      MAXIMUM_CAR_CAPACITY=st.number_input('MaximumCarCapacity :battery:',min_value=0,max_value=300000,value=300000,step=10000,key="max_car_cap_input")
-     
+     st.sidebar.image('imgs\SaxionLogo.png',width=200)
      main()
      
