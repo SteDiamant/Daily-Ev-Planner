@@ -78,8 +78,8 @@ $$\text{TotalDemand (W)} = \text{General Demand (W)} + \text{Heating Demand (W)}
 
 $$\text{Imbalance (W)} = \text{TotalDemand (W)} + \text{PV (W)}*NumberPV$$
 
-$$\text{TotalEVCharge (W)}={TotalEVCharge_1 (W)} + {TotalEVCharge_2 (W)} +{TotalEVCharge_3 (W)}+{TotalEVCharge_4 (W)}  $$
-$$\text{TotalEVDisCharge (W)}={TotalEVDisCharge_1 (W)} + {TotalEVDisCharge_2 (W)} +{TotalEVDisCharge_3 (W)}+{TotalEVDisCharge_4 (W)}  $$
+$$\text{TotalEVCharge (W)}={\sum_{i=1}^4 TotalEVCharge_i (W)} $$
+$$\text{TotalEVDisCharge (W)}={\sum_{i=1}^4 TotalEVDisCharge_i (W)}  $$
 
 $$\text{TotalImbalance (W)} = \text{Imbalance (W)} + \text{TotalEVCharge (W)} + \text{Total EVDisCharge (W)}$$
 
