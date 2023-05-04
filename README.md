@@ -78,17 +78,17 @@ The "Plot Tool" feature provides users with a convenient and efficient way to vi
 
 ![plot](imgs/Plot.png)
 Additionally, the plot includes information such as the `PV (W)` output, `Imbalance (W)`, and `Total_Imbalance (W)`, allowing users to gain a comprehensive understanding of the system's overall performance.
-<div class="warning">
+<div class="warning" style="width: 100%;">
 
-$$\text{TotalDemand (W)} = \text{General Demand (W)} + \text{Heating Demand (W)}$$
+$${TotalDemand (W)} = {General Demand (W)} + {Heating Demand (W)}$$
 
-$$\text{Imbalance (W)} = \text{TotalDemand (W)} + \text{PV (W)}*NumberPV$$
+$${Imbalance (W)} = {TotalDemand (W)} + {PV (W)}*NumberPV$$
 
-$$\text{TotalEVCharge (W)}={\sum_{i=1}^4 TotalEVCharge_i (W)} $$
+$${TotalEVCharge (W)}={\sum_{i=1}^4 TotalEVCharge_i (W)} $$
 
-$$\text{TotalEVDisCharge (W)}={\sum_{i=1}^4 TotalEVDisCharge_i (W)}  $$
+$${TotalEVDisCharge (W)}={\sum_{i=1}^4 TotalEVDisCharge_i (W)}  $$
 
-$$\text{TotalImbalance (W)} = \text{Imbalance (W)} + \text{TotalEVCharge (W)} + \text{Total EVDisCharge (W)}$$
+$${TotalImbalance (W)} = {Imbalance (W)} + {TotalEVCharge (W)} + {Total EVDisCharge (W)}$$
 
 </div>
 The multiselect dropdown menu enables users to select the EVs they wish to view on the plot, providing a customizable and user-friendly experience. By allowing users to select specific EVs, they can focus on the vehicles that are most relevant to them, saving time and improving productivity.
