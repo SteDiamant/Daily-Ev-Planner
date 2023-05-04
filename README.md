@@ -2,6 +2,7 @@
 
 The 'Daily Ev Planner' is a software tool that allows users to manage the charging and discharging behavior of up to four electric vehicles (EVs) in a streamlined and user-friendly way. With features such as a plot tool, daily power exchange analysis, and battery view, users can easily visualize and analyze the performance of their EVs over time. The tool is designed to help users optimize system performance and efficiency by providing a comprehensive view of the charging and discharging behavior of their EVs.
 
+![Overview](imgs/Overview.png)
 ## Table of Contents
 
 - [Installation](#installation)
@@ -16,31 +17,24 @@ The 'Daily Ev Planner' is a software tool that allows users to manage the chargi
 1. Clone the repository to your local machine using the following command:
     
     ```bash
-    
     git clone https://github.com/SteDiamant/streamlitProject
-    
     ```
     
 2. Navigate to the project directory:
     
     ```bash
-    
     cd streamlitProject
-    
     ```
     
 3. Install the required Python packages using pip:
     
     ```python
-    
     pip install -r requirements.txt
-    
     ```
     
 4. Run the application using Streamlit:
     
     ```python
-    
     streamlit run app.py
     ```
 
@@ -54,8 +48,18 @@ https://stediamant-streamlitproject-home-fhhcal.streamlit.app/DailyEVPlanner
 
 
 
-
 ## Features
+### Day Choice
+Daily data with 15-minute intervals were created by dividing the original yearly dataset into equal chunks of 96, representing daily data with 15-minute intervals.
+
+![DailySelector](imgs/DailySelctor.png)  
+
+
+### Maximum Battery Capacity Controler
+
+This variable controls the Maximum Capacity of all batteries.
+
+![MaximumBatteryCapacity](imgs/MaxCap.png) 
 
 ### EV Charging and Discharging Controller
 The "EV Charging and Discharging Controller" feature allows users to define the charging and discharging behavior of up to four electric vehicles (EVs) within a Streamlit application. The feature is implemented using Streamlit's st.form() function to create a user interface that can be easily filled out by the user.
