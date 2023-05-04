@@ -78,6 +78,8 @@ The "Plot Tool" feature provides users with a convenient and efficient way to vi
 
 ![plot](imgs/Plot.png)
 Additionally, the plot includes information such as the `PV (W)` output, `Imbalance (W)`, and `Total_Imbalance (W)`, allowing users to gain a comprehensive understanding of the system's overall performance.
+<div class="warning">
+
 $$\text{TotalDemand (W)} = \text{General Demand (W)} + \text{Heating Demand (W)}$$
 
 $$\text{Imbalance (W)} = \text{TotalDemand (W)} + \text{PV (W)}*NumberPV$$
@@ -88,6 +90,7 @@ $$\text{TotalEVDisCharge (W)}={\sum_{i=1}^4 TotalEVDisCharge_i (W)}  $$
 
 $$\text{TotalImbalance (W)} = \text{Imbalance (W)} + \text{TotalEVCharge (W)} + \text{Total EVDisCharge (W)}$$
 
+</div>
 The multiselect dropdown menu enables users to select the EVs they wish to view on the plot, providing a customizable and user-friendly experience. By allowing users to select specific EVs, they can focus on the vehicles that are most relevant to them, saving time and improving productivity.
 ![dropDown](imgs/DropDown.png)
 Overall, the "Plot Tool" feature provides users with a powerful tool to visualize and analyze the performance of the EV charging and discharging system, helping to ensure optimal system performance and efficiency.
