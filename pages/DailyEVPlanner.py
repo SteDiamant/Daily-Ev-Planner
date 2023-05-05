@@ -585,7 +585,7 @@ def main():
             c31,c32,c33 = st.columns([1,1,3])
             with c31:
                 st.subheader('Start')
-                car1_battery_lvl3 = unique_df['BatteryLVL1'][1]
+                car1_battery_lvl3 = unique_df['BatteryLVL3'][1]
                 car1_html3=HtmlGenerator.battery_lvl1(1,car1_battery_lvl3)
                 st.markdown(car1_html3, unsafe_allow_html=True)
             
