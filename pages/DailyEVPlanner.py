@@ -532,11 +532,14 @@ def main():
                 car1_html11=HtmlGenerator.battery_lvl1(1,car1_battery_lvl11)
                 st.markdown(car1_html11, unsafe_allow_html=True)
             with c12:
-                fig12,ax12=plt.subplots(figsize=(1,1))
-                count_g1=unique_df[(unique_df['EV1_charge (W)'] > 0) & (unique_df['Total_Imbalance (W)'] < 0)]['BatteryLVL1'].count()
-                count_1=unique_df[(unique_df['EV1_charge (W)'] > 0) & (unique_df['Total_Imbalance (W)'] > 0)]['BatteryLVL1'].count()
-                fig22=(plot_pie_chart(['Green','Red'],[count_g1,count_1]))
-                st.pyplot(fig22)
+                try:
+                    fig12,ax12=plt.subplots(figsize=(1,1))
+                    count_g1=unique_df[(unique_df['EV1_charge (W)'] > 0) & (unique_df['Total_Imbalance (W)'] < 0)]['BatteryLVL1'].count()
+                    count_1=unique_df[(unique_df['EV1_charge (W)'] > 0) & (unique_df['Total_Imbalance (W)'] > 0)]['BatteryLVL1'].count()
+                    fig22=(plot_pie_chart(['Green','Red'],[count_g1,count_1]))
+                    st.pyplot(fig22)
+                except:
+                    st.markdown('No data')
             with c13:
                 fig,ax=plt.subplots(figsize=(10,2))
                 ax.stackplot(unique_df.index, unique_df['BatteryLVL1'], color='r')
