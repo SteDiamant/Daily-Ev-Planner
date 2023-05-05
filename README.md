@@ -95,6 +95,8 @@ The multiselect dropdown menu enables users to select the EVs they wish to view 
 ![dropDown](imgs/DropDown.png)
 Overall, the "Plot Tool" feature provides users with a powerful tool to visualize and analyze the performance of the EV charging and discharging system, helping to ensure optimal system performance and efficiency.
 
+![Alt Text](imgs/DropDown.png)
+
 ## Daily Power Exhcange Analysis
 The 'Daily Power Exhcange Analysis' feature provides a user-friendly and interactive plot tool for visualizing the charging and discharging behavior of up to four different electric vehicles (EVs). The tool is contained in a container object and divided into three columns, each displaying a different type of plot.
 
