@@ -539,7 +539,7 @@ def main():
                     fig22=(plot_pie_chart(['Green','Red'],[count_g1,count_1]))
                     st.pyplot(fig22)
                 except:
-                    st.markdown('No data')
+                    st.markdown('Neither charging nor discharging happened')
             with c13:
                 fig,ax=plt.subplots(figsize=(10,2))
                 ax.stackplot(unique_df.index, unique_df['BatteryLVL1'], color='r')
@@ -567,11 +567,14 @@ def main():
                 car1_html12=HtmlGenerator.battery_lvl1(1,car1_battery_lvl12)
                 st.markdown(car1_html12, unsafe_allow_html=True)
             with c22:
-                fig22,ax22=plt.subplots(figsize=(1,1))
-                count_g2=unique_df[(unique_df['EV2_charge (W)'] > 0) & (unique_df['Total_Imbalance (W)'] < 0)]['BatteryLVL2'].count()
-                count_2=unique_df[(unique_df['EV2_charge (W)'] > 0) & (unique_df['Total_Imbalance (W)'] > 0)]['BatteryLVL2'].count()
-                fig22=(plot_pie_chart(['Green','Red'],[count_g2,count_2]))
-                st.pyplot(fig22)
+                try:   
+                    fig22,ax22=plt.subplots(figsize=(1,1))
+                    count_g2=unique_df[(unique_df['EV2_charge (W)'] > 0) & (unique_df['Total_Imbalance (W)'] < 0)]['BatteryLVL2'].count()
+                    count_2=unique_df[(unique_df['EV2_charge (W)'] > 0) & (unique_df['Total_Imbalance (W)'] > 0)]['BatteryLVL2'].count()
+                    fig22=(plot_pie_chart(['Green','Red'],[count_g2,count_2]))
+                    st.pyplot(fig22)
+                except:
+                    st.markdown('Neither charging nor discharging happened')
             with c23:
                 fig,ax=plt.subplots(figsize=(10,2))
                 ax.stackplot(unique_df.index, unique_df['BatteryLVL2'], color='r')
@@ -597,12 +600,14 @@ def main():
                 car1_html13=HtmlGenerator.battery_lvl1(1,car1_battery_lvl13)
                 st.markdown(car1_html13, unsafe_allow_html=True)
             with c32:
-                fig32,ax32=plt.subplots(figsize=(1,1))
-                count_g3=unique_df[(unique_df['EV3_charge (W)'] > 0) & (unique_df['Total_Imbalance (W)'] < 0)]['BatteryLVL3'].count()
-                count_3=unique_df[(unique_df['EV3_charge (W)'] > 0) & (unique_df['Total_Imbalance (W)'] > 0)]['BatteryLVL3'].count()
-                fig32=(plot_pie_chart(['Green','Red'],[count_g3,count_3]))
-                st.pyplot(fig32)
-            
+                try:
+                    fig32,ax32=plt.subplots(figsize=(1,1))
+                    count_g3=unique_df[(unique_df['EV3_charge (W)'] > 0) & (unique_df['Total_Imbalance (W)'] < 0)]['BatteryLVL3'].count()
+                    count_3=unique_df[(unique_df['EV3_charge (W)'] > 0) & (unique_df['Total_Imbalance (W)'] > 0)]['BatteryLVL3'].count()
+                    fig32=(plot_pie_chart(['Green','Red'],[count_g3,count_3]))
+                    st.pyplot(fig32)
+                except:
+                    st.markdown('Neither charging nor discharging happened')
             with c33:
                 fig,ax=plt.subplots(figsize=(10,2))
                 ax.stackplot(unique_df.index, unique_df['BatteryLVL3'], color='r')
@@ -628,11 +633,14 @@ def main():
                 car1_html11=HtmlGenerator.battery_lvl1(1,car1_battery_lvl11)
                 st.markdown(car1_html11, unsafe_allow_html=True)
             with c42:
-                fig42,ax42=plt.subplots(figsize=(1,1))
-                count_g4=unique_df[(unique_df['EV4_charge (W)'] > 0) & (unique_df['Total_Imbalance (W)'] < 0)]['BatteryLVL4'].count()
-                count_4=unique_df[(unique_df['EV4_charge (W)'] > 0) & (unique_df['Total_Imbalance (W)'] > 0)]['BatteryLVL4'].count()
-                fig42=(plot_pie_chart(['Green','Red'],[count_g4,count_4]))
-                st.pyplot(fig42)
+                try:
+                    fig42,ax42=plt.subplots(figsize=(1,1))
+                    count_g4=unique_df[(unique_df['EV4_charge (W)'] > 0) & (unique_df['Total_Imbalance (W)'] < 0)]['BatteryLVL4'].count()
+                    count_4=unique_df[(unique_df['EV4_charge (W)'] > 0) & (unique_df['Total_Imbalance (W)'] > 0)]['BatteryLVL4'].count()
+                    fig42=(plot_pie_chart(['Green','Red'],[count_g4,count_4]))
+                    st.pyplot(fig42)
+                except:
+                    st.markdown('Neither charging nor discharging happened')
             with c43:
                 fig,ax=plt.subplots(figsize=(10,3))
                 ax.stackplot(unique_df.index, unique_df['BatteryLVL4'], color='r')
