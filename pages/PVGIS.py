@@ -36,81 +36,100 @@ def prepare_data():
     return df
 # Drop the first 95 rows and the last n rows of data2, where n is the difference in row lengths between data2 and data1
 
-df = prepare_data()
-new_data = pd.read_csv(r'estimated_actuals.csv')
-new_data.rename(columns={'ghi':'Ghi','ebh':'Ebh','dni':'Dni','dhi':'Dhi','cloud_opacity':'CloudOpacity'}, inplace=True)
-new_data['PV (W)'] = np.zeros(len(new_data))
-new_data.index = pd.to_datetime(new_data['period_end'], utc=True).dt.tz_convert(None)
-new_data.drop(['period_end','period'], axis=1,inplace=True)
-new_data['Timestampt'] = new_data.index
-new_data['TimestamptMonth'] = new_data['Timestampt'].dt.month
-new_data['TimestamptDay'] = new_data['Timestampt'].dt.day
-new_data['TimestamptHour'] = new_data['Timestampt'].dt.hour
-new_data['TimestamptMinute'] = new_data['Timestampt'].dt.minute
-df['Timestampt'] = df.index
-df['TimestamptMonth'] = df['Timestampt'].dt.month
-df['TimestamptDay'] = df['Timestampt'].dt.day
-df['TimestamptHour'] = df['Timestampt'].dt.hour
-df['TimestamptMinute'] = df['Timestampt'].dt.minute
-df = df.dropna(subset=['PV (W)'])
-st.dataframe(df)
-st.dataframe(new_data)
-# # Split data into training and validation sets
+def prepare_data():
+    # Prepare the data as per your requirements
+    df = ...
+    return df
 
-X_train = df[['TimestamptMinute','TimestamptHour','TimestamptMonth','TimestamptDay','CloudOpacity', 'Dhi', 'Dni', 'Ebh', 'Ghi']]
-y_train = df['PV (W)']
-X_val = df[['TimestamptMinute','TimestamptHour','TimestamptMonth','TimestamptDay','CloudOpacity', 'Dhi', 'Dni', 'Ebh', 'Ghi']]
-y_val = df['PV (W)']
+def preprocess_data(df):
+    df['Timestampt'] = df.index
+    df['TimestamptMonth'] = df['Timestampt'].dt.month
+    df['TimestamptDay'] = df['Timestampt'].dt.day
+    df['TimestamptHour'] = df['Timestampt'].dt.hour
+    df['TimestamptMinute'] = df['Timestampt'].dt.minute
+    df = df.dropna(subset=['PV (W)'])
+    return df
 
-# # Create and fit linear regression model
-model = LinearRegression()
-model.fit(X_train, y_train)
+def train_model(df):
+    X_train = df[['TimestamptMinute', 'TimestamptHour', 'TimestamptMonth', 'TimestamptDay', 'CloudOpacity', 'Dhi', 'Dni', 'Ebh', 'Ghi']]
+    y_train = df['PV (W)']
+    model = LinearRegression()
+    model.fit(X_train, y_train)
+    return model
 
-# # Make predictions on validation set and calculate mean squared error
-y_val_pred = model.predict(X_val)
+def save_model(model, filename):
+    joblib.dump(model, filename)
 
+def load_model(filename):
+    model = joblib.load(filename)
+    return model
 
+def preprocess_new_data(new_data):
+    new_data.index = pd.to_datetime(new_data['period_end']).dt.tz_convert(None)
+    new_data.drop(['period_end','period'], axis=1, inplace=True)
+    new_data['Timestampt'] = new_data.index
+    new_data['TimestamptMonth'] = new_data['Timestampt'].dt.month
+    new_data['TimestamptDay'] = new_data['Timestampt'].dt.day
+    new_data['TimestamptHour'] = new_data['Timestampt'].dt.hour
+    new_data['TimestamptMinute'] = new_data['Timestampt'].dt.minute
+    return new_data
 
-# # Save trained model to file
-joblib.dump(model, 'trained_model.joblib')
+def predict_new_data(model, new_data):
+    X_new = new_data[['TimestamptMinute', 'TimestamptHour', 'TimestamptMonth', 'TimestamptDay', 'CloudOpacity', 'Dhi', 'Dni', 'Ebh', 'Ghi']]
+    y_pred = model.predict(X_new)
+    y_pred_df = pd.DataFrame(y_pred, columns=["PV_prediction (W)"], index=new_data.index)
+    results = pd.concat([new_data, y_pred_df], axis=1)
+    return results
 
+def plot_results(df_filtered, results):
+    fig, ax = plt.subplots()
+    dt_range = pd.date_range(start='2021-04-26 11:00:00', end='2021-05-03 11:00:00', freq='30T')
+    x = np.arange(len(dt_range))
+    ax.plot(x, results['PV_prediction (W)'], color='red', label='Predicted PV')
+    ax.plot(x, df_filtered['PV (W)'], color='blue', label='Original PV')
+    ax.set_title('PV Prediction vs. Original PV')
+    ax.legend()
+    return fig
 
+def main():
+    df = prepare_data()
+    new_data = pd.read_csv('estimated_actuals.csv')
+    new_data.rename(columns={'ghi':'Ghi', 'ebh':'Ebh', 'dni':'Dni', 'dhi':'Dhi', 'cloud_opacity':'CloudOpacity'}, inplace=True)
+    new_data['PV (W)'] = np.zeros(len(new_data))
+    
+    df = preprocess_data(df)
+    
+    # Split data into training and validation sets
+    X_train = df[['TimestamptMinute', 'TimestamptHour', 'TimestamptMonth', 'TimestamptDay', 'CloudOpacity', 'Dhi', 'Dni', 'Ebh', 'Ghi']]
+    y_train = df['PV (W)']
+    X_val = df[['TimestamptMinute', 'TimestamptHour', 'TimestamptMonth', 'TimestamptDay', 'CloudOpacity', 'Dhi', 'Dni', 'Ebh', 'Ghi']]
+    y_val = df['PV (W)']
 
-# Preprocess new data (same preprocessing steps as training data)
+    # Create and fit linear regression model
+    model = train_model(df)
 
-# Load saved model
-model = joblib.load('trained_model.joblib')
+    # Save trained model to file
+    save_model(model, 'trained_model.joblib')
 
-# Make predictions on new data
-X_new = new_data[['TimestamptMinute','TimestamptHour','TimestamptMonth','TimestamptDay','CloudOpacity', 'Dhi', 'Dni', 'Ebh', 'Ghi']]
-y_pred = model.predict(X_new)
-y_pred_df = pd.DataFrame(y_pred, columns=["PV_prediction (W)"], index=new_data.index)
+    # Preprocess new data
+    new_data = preprocess_new_data(new_data)
 
-# Combine original and predicted dataframes horizontally
-results = pd.concat([new_data, y_pred_df],axis=1)
-# Filter original data from 26/04 to 05/03
-df_filtered = df.loc['2021-04-26 11:00:00':'2021-05-03 11:00:00']
+    # Load saved model
+    model = load_model('trained_model.joblib')
 
+    # Make predictions on new data
+    results = predict_new_data(model, new_data)
 
+    # Filter original data
+    df_filtered = df.loc['2021-04-26 11:00:00':'2021-05-03 11:00:00']
 
-# create a new figure and axes
-fig, ax = plt.subplots()
-dt_range = pd.date_range(start='2021-04-26 11:00:00', end='2021-05-03 11:00:00', freq='30T')
-x = np.arange(len(dt_range))
-# plot the predicted PV line on the axes
-ax.plot(x, results['PV_prediction (W)'], color='red', label='Predicted PV')
+    # Plot results
+    fig = plot_results(df_filtered, results)
 
-# plot the original PV line on the axes
-ax.plot(x, df_filtered['PV (W)'], color='blue', label='Original PV')
+    # Display the figure in Streamlit
+    st.pyplot(fig)
 
-# set the title and legend
-ax.set_title('PV Prediction vs. Original PV')
-ax.legend()
-
-# save the figure
-
-
-# display the figure in Streamlit
-st.pyplot(fig)
+if __name__ == '__main__':
+    main()
 
 
