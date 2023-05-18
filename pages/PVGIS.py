@@ -37,7 +37,7 @@ def prepare_data():
 # Drop the first 95 rows and the last n rows of data2, where n is the difference in row lengths between data2 and data1
 
 df = prepare_data()
-new_data = pd.read_csv('../estimated_actuals.csv')
+new_data = pd.read_csv(r'estimated_actuals.csv')
 new_data.rename(columns={'ghi':'Ghi','ebh':'Ebh','dni':'Dni','dhi':'Dhi','cloud_opacity':'CloudOpacity'}, inplace=True)
 new_data['PV (W)'] = np.zeros(len(new_data))
 new_data.index = pd.to_datetime(new_data['period_end'], utc=True).dt.tz_convert(None)
