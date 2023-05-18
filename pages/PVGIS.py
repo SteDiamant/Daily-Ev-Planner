@@ -18,7 +18,7 @@ def convert_timestamp(timestamp_str):
 
 def prepare_data():
     data1 = pd.read_csv(r'data_original.csv')
-    data2 = pd.read_csv(r'../52.329895_6.112541_Solcast_PT15M.csv')
+    data2 = pd.read_csv(r'52.329895_6.112541_Solcast_PT15M.csv')
     data1.set_index(pd.DatetimeIndex(data1['Time']), inplace=True)
     data1 = data1.resample('30T').mean()
     data1.dropna()
