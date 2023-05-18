@@ -134,26 +134,26 @@ Each expander consists of two columns, where the left column shows the starting 
 
 ![battery1](imgs/battery1.png)
 
-The pie chart that shows the proportion of energy coming from photovoltaics (PVs) and from the grid.
+<!-- The pie chart that shows the proportion of energy coming from photovoltaics (PVs) and from the grid.
 
 The graph has two areas: one area represents the energy charged from green sources, while the other represents energy charged from non-green sources. 
 
 There are blue horizontal lines on the graph that indicate the battery capacity levels of the EV (20%, 80%, and 100%), and a red horizontal line indicating the maximum battery capacity of the EV. 
 
 
-## Credits
-This modelling tool was developed by Stelios Diamantopoulos for the purpose of Microgrid Modeling for Saxion University Of Applied Science Sustainability lab. The project was supervised by Professor `Rita Garcia Peran` Energy Engineer.
+[//]: <> ## Credits
+[//]: <> This modelling tool was developed by Stelios Diamantopoulos for the purpose of Microgrid Modeling for Saxion University Of Applied Science Sustainability lab. The project was supervised by Professor `Rita Garcia [//]: <> Peran` Energy Engineer.
 
-The following individuals also contributed to the development of the tool:
+[//]: <> The following individuals also contributed to the development of the tool:
 
 
-`Edmund Schaefer`, Senior Lecturer/Researcher at Saxion Univrsity Of Applied Science .
-\
-`Viktor Nikolayev`, Electrical and Electronic Engineering / Software Development / Geographical Information Systems .
+[//]: <> `Edmund Schaefer`, Senior Lecturer/Researcher at Saxion Univrsity Of Applied Science .
+[//]: <> \
+[//]: <> `Viktor Nikolayev`, Electrical and Electronic Engineering / Software Development / Geographical Information Systems .
 
-Who assisted with data collection, analysis and provided feedback for the development process.
+[//]: <> Who assisted with data collection, analysis and provided feedback for the development process.
 
-I would like to thank everyone who contributed to this project and made it possible. This tool is released under the Apache License, Version 2.0, and we encourage others to build upon our work and continue to advance the field of microgrid modeling.
+[//]: <> I would like to thank everyone who contributed to this project and made it possible. This tool is released under the Apache License, Version 2.0, and we encourage others to build upon our work and continue to [//]: <> advance the field of microgrid modeling.-->
 
 ## Future Work
 
