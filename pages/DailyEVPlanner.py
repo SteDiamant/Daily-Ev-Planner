@@ -697,7 +697,7 @@ if __name__ == '__main__':
         formatted_date = f"{day_index}/{calendar.month_abbr[(day - 1) // 27 + 1]}"
         days_mapping[day] = formatted_date
 
-     #today = datetime.date.today()
+     
      DAY = st.selectbox('Select Day :calendar:', list(days_mapping.keys()), format_func=lambda key: days_mapping[key])
 
 
