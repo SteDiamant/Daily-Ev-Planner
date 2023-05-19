@@ -5,6 +5,7 @@ import matplotlib.pyplot as plt
 import streamlit as st
 import seaborn as sns
 from html2markdown import convert
+import calendar
 
 
 
@@ -686,7 +687,20 @@ if __name__ == '__main__':
      sns.set(style="darkgrid")
      st. set_page_config(layout="wide")
      st.title('EV Charging and Discharging Planner for a day')
-     DAY=st.selectbox('Select Day :calendar:',range(1,322))
+
+     days_mapping = {}
+     day_index = 0
+     for day in range(1, 323):
+        day_index += 1
+        if day_index % 31 == 0:
+            day_index = 1
+        formatted_date = f"{day_index}/{calendar.month_abbr[(day - 1) // 27 + 1]}"
+        days_mapping[day] = formatted_date
+
+     
+     DAY = st.selectbox('Select Day :calendar:', list(days_mapping.keys()), format_func=lambda key: days_mapping[key])
+
+
      MAXIMUM_CAR_CAPACITY=st.number_input('MaximumCarCapacity :battery:',min_value=0,max_value=300000,value=300000,step=10000,key="max_car_cap_input")
      st.sidebar.image('imgs/SaxionLogo.png',width=200)
      
