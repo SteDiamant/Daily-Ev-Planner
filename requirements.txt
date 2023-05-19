@@ -4,6 +4,7 @@ pandas==1.5.3
 scipy==1.10.1
 seaborn==0.12.2
 streamlit==1.20.0
+pip==23.1.2
 html2markdown
 scikit-learn
 calendar
