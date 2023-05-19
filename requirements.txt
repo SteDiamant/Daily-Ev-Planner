@@ -1,10 +1,9 @@
+html2markdown==0.1.7
+joblib==1.2.0
 matplotlib==3.7.1
 numpy==1.24.2
 pandas==1.5.3
-scipy==1.10.1
+Pillow==9.5.0
+scikit_learn==1.2.2
 seaborn==0.12.2
-streamlit==1.22.0
-pip==22.0.3
-html2markdown
-scikit-learn
-calendar
+streamlit==1.21.0
