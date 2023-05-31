@@ -44,7 +44,7 @@ To use the EV Charging and Discharging Controller, you have two options:
 
 1. Clone the repository and install the application on your local machine. Follow the installation instructions to run the app on your local network.
 2. Access the online version hosted on Streamlit Cloud by going to the following link: <br> 
-https://stediamant-streamlitproject-home-fhhcal.streamlit.app/DailyEVPlanner
+https://stediamant-daily-ev-planner-home-8x8irb.streamlit.app/
 
 
 
@@ -84,11 +84,13 @@ $${TotalDemand (W)} = {General Demand (W)} + {Heating Demand (W)}$$
 
 $${Imbalance (W)} = {TotalDemand (W)} + {PV (W)}*NumberPV$$
 
-$${TotalEVCharge (W)}={\sum_{i=1}^4 TotalEVCharge_i (W)} $$
+$${TotalEVCharge (W)}={\sum_{i=1}^4 EVCharge_i (W)} $$
 
-$${TotalEVDisCharge (W)}={\sum_{i=1}^4 TotalEVDisCharge_i (W)}  $$
+$${TotalEVDisCharge (W)}={\sum_{i=1}^4 EVDisCharge_i (W)}  $$
 
 $${TotalImbalance (W)} = {Imbalance (W)} + {TotalEVCharge (W)} + {Total EVDisCharge (W)}$$
+
+$${SOC_i (W)} = {InitialCharge_i (W)} + {} + {EVCharge_i (W)+{EVDisCharge_i (W)}}$$
 
 </div>
 The multiselect dropdown menu enables users to select the EVs they wish to view on the plot, providing a customizable and user-friendly experience. By allowing users to select specific EVs, they can focus on the vehicles that are most relevant to them, saving time and improving productivity.
@@ -133,6 +135,37 @@ The 'BatteryView' creates 4 expanders that display the battery level of 4 differ
 Each expander consists of two columns, where the left column shows the starting and ending battery level of the charging session for the corresponding EV, while the right column displays a graph of the battery level over time.
 
 ![battery1](imgs/battery1.png)
+
+### Download CSV file for further analysis
+For any given day in the calendar year the user can simulate the Charging and Discharging for up to 4 Evs and visually see and evaluate the scenario. For further analysis a scenario that would involve multiple days in a row can occur. 
+
+![downloadCSV](imgs/downloadCSV.jpg)
+
+Dowload csv file is a feature where the user can download the corresponded dataset for any set of parameters at any given day . 
+
+### PV production estimation PVGSIS
+
+Data is collected from PVGIS and Solcast for the duration (27-4-23 and 3-5-23)
+
+Using a linear regression model i am trying to train a machine learning model to predict the PV production given a set of paremeters
+
+- **TimestamptMinute**: This column represents the minute component of the timestamp. It indicates the specific minute of the hour for a given data point.
+- **TimestamptHour**: This column represents the hour component of the timestamp. It indicates the specific hour of the day for a given data point.
+- **TimestamptMonth**: This column represents the month component of the timestamp. It indicates the specific month of the year for a given data point.
+- **TimestamptDay**: This column represents the day component of the timestamp. It indicates the specific day of the month for a given data point.
+- **CloudOpacity**: This column represents the cloud opacity. Cloud opacity refers to the extent to which clouds obstruct sunlight. It indicates the amount of cloud cover at a particular time.
+- **Dhi**: This column represents the diffuse horizontal irradiance. DHI refers to the amount of solar radiation received from the sky dome scattered by the atmosphere. It represents the solar radiation received from all directions except the direct sun.
+- **Dni**: This column represents the direct normal irradiance. DNI refers to the amount of solar radiation received per unit area from the direction of the sun on a surface that is perpendicular to the sun's rays. It represents the direct solar radiation.
+- **Ebh**: This column represents the estimated actual horizontal irradiance. EBH refers to the amount of solar radiation received on a horizontal surface.
+- **Ghi**: This column represents the global horizontal irradiance. GHI refers to the total amount of solar radiation received on a horizontal surface, including both direct and diffuse solar radiation.
+
+![predictionImage](imgs/predictionMOdel.jpg)
+
+As you can see the model outputs a model that follows the flactuations of a PV production (High Production during dat and almost zero duting night)</br>
+TO DO LIST
+-  The predictedPV should be compared with the acutal readings from the region for the specified timeline .
+- More features regarding weather data can be used ex(wind Speed).
+- Connect API from PVGSIS and SOLARCAST so i can retrive data for any location and time period .
 
 <!-- The pie chart that shows the proportion of energy coming from photovoltaics (PVs) and from the grid.
 
