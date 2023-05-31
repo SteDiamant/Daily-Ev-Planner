@@ -23,7 +23,7 @@ def ETL():
     df['Hour'] = df['Time'].dt.hour
     df['Minute'] = df['Time'].dt.minute
     df.drop(columns=['EV Demand (W)'],inplace=True)
-    df['PV (W)']=df['PV (W)']*327
+    df['PV (W)']=df['PV (W)']*(327/4)
     df['TotalDemand (W)']=df['General Demand (W)']+df['Heating Demand (W)']
     df['Imbalance (W)']=df['TotalDemand (W)']+df['PV (W)']
     power_imported = np.where(df['Imbalance (W)'] > 0, df['TotalDemand (W)']+df['PV (W)'],0)
@@ -657,27 +657,12 @@ def main():
                 st.pyplot(fig) 
                 
             st.write('------------------------------------')
+        st.download_button(
+            label="Download data as CSV",
+            data=unique_df.to_csv(index=True),
+            file_name=f'{DAY}.csv',
+            mime='text/csv')
             
-        # download= st.download_button(
-        #     data=convert_df(unique_df),
-        #     file_name=f"""EV_Profile{DAY}.csv""",
-        #     label="Download data as CSV",
-        #     key='download',on_click=save_info(start_charge_time1,end_charge_time1,
-        #                                     start_charge_time2,end_charge_time2,
-        #                                     start_charge_time3,end_charge_time3,
-        #                                     start_charge_time4,end_charge_time4,
-        #                                     start_discharge_time1,end_discharge_time1,
-        #                                     end_discharge_time2,end_discharge_time2,
-        #                                     start_discharge_time3,end_discharge_time3,
-        #                                     start_discharge_time4,end_discharge_time4,
-        #                                     DAY,
-        #                                     SCALE_FACTOR1_CHARGE,SCALE_FUCTOR2_CHARGE,
-        #                                     SCALE_FUCTOR3_CHARGE,SCALE_FUCTOR4_CHARGE,
-        #                                     SCALE_FACTOR1_DISHCARGE,SCALE_FUCTOR2_DISCHARGE,
-        #                                     SCALE_FUCTOR3_DISCHARGE,SCALE_FUCTOR4_DISCHARGE))
-        # if download:
-        #     st.success('Downloaded')
-        
             
             
         
