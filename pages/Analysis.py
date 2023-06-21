@@ -48,7 +48,7 @@ def create_total_demand_vs_ev_charge_plot(upload_file):
     effect = ((total_demand_sum) / total_ev_discharge) * 100
 
     data = {'Category': [ 'Total_EV_Discharge', '2-hours-Peak Demand'],
-            'Value': [ -total_ev_discharge*0.0025, total_demand_sum*0.0025]}
+            'Value': [ -total_ev_discharge*0.00025, total_demand_sum*0.00025]}
     df_plot = pd.DataFrame(data)
 
     fig, ax = plt.subplots(figsize=(6,12))
@@ -110,6 +110,7 @@ def plot_pie_chart(labels, values):
 def main(data):
     c1,c2=st.columns([2,1])
     with c1:
+        st.subheader("Imbalance Effect")
         fig1 = plot_imbalance_effect(data)
         st.pyplot(fig1)
         car1_init_charge = data['BatteryLVL1'].head(1)
@@ -133,6 +134,7 @@ def main(data):
             good_energy_count,bad_energy_count,total_EV_demand_count,per_car_count_list=count_positive_charge_negative_imbalance(data)
             st.pyplot(plot_pie_chart(["PVs","From Grid"],[good_energy_count,bad_energy_count]))
     with c2:
+        st.subheader("Energy Supply vs 2H blackout")
         fig2,effect = create_total_demand_vs_ev_charge_plot(data)
         st.pyplot(fig2)
         
@@ -144,8 +146,11 @@ def main(data):
 
 if __name__ == "__main__":
     data=st.file_uploader("Upload a file", type="csv")
-    df=pd.read_csv(data)
-    main(df)
+    if data is None:
+        st.text("Please upload a file")
+    else:
+        df=pd.read_csv(data)
+        main(df)
     
     
 
