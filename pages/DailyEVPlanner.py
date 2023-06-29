@@ -357,8 +357,14 @@ def main():
                     start_charge_time1 = st.time_input('start charge1 :clock1: ',value=time(hour=9, minute=30),key='start_charge_time1')
                     end_charge_time1 = st.time_input('end charge1 :checkered_flag:',value=time(hour=15, minute=45),key='end_charge_time1')
                     SCALE_FACTOR1_CHARGE=st.slider('EV1 charge multiplier',min_value=0.0,max_value=5.0,value=1.0,step=0.1)
-                    battery1=st.slider('Initial EV1 Battery:battery:',min_value=0.0,max_value=300000.0,value=100000.0,step=1000.0)
-                    
+                    battery1_per = st.slider(
+                        'Initial EV1 Battery :battery: %',
+                        min_value=0.0,
+                        max_value=100.0,
+                        value=30.0,
+                        step=1.0)
+                    battery1 =battery1_per / 100 * 300000
+
 
                     
             with dis1:
@@ -375,8 +381,13 @@ def main():
                     start_charge_time2 = st.time_input('start charge 2 :clock1:',value=time(hour=8, minute=30))
                     end_charge_time2 = st.time_input('end charge 2 :checkered_flag:',value=time(hour=13, minute=30))
                     SCALE_FUCTOR2_CHARGE=st.slider('EV2 charge multiplier',min_value=0.0,max_value=5.0,value=1.0,step=0.1)
-                    battery2=st.slider('Initial EV2 Battery:battery:',min_value=0.0,max_value=300000.0,value=100000.0,step=1000.0)
-                    
+                    battery2_per = st.slider(
+                        'Initial EV2 Battery :battery: %',
+                        min_value=0.0,
+                        max_value=100.0,
+                        value=30.0,
+                        step=1.0)
+                    battery2 =battery2_per / 100 * 300000
                     
             with dis2:
                 with st.expander('EV2 DisCharge'):
@@ -394,8 +405,13 @@ def main():
                     start_charge_time3= st.time_input('start charge 3 :clock1:',value=time(hour=9, minute=30))
                     end_charge_time3 = st.time_input('end charge 3 :checkered_flag:',value=time(hour=15, minute=30))
                     SCALE_FUCTOR3_CHARGE=st.slider('EV3 charge multiplier',min_value=0.0,max_value=5.0,value=1.0,step=0.1)
-                    battery3=st.slider('Initial EV3 Battery:battery:',min_value=0.0,max_value=300000.0,value=100000.0,step=1000.0)
-                    
+                    battery3_per = st.slider(
+                        'Initial EV3 Battery :battery: %',
+                        min_value=0.0,
+                        max_value=100.0,
+                        value=30.0,
+                        step=1.0)
+                    battery3 =battery3_per / 100 * 300000
                     
             with dis3:
                 with st.expander('EV3 DisCharge'):
@@ -410,7 +426,13 @@ def main():
                     start_charge_time4 = st.time_input('start charge 4 :clock1:',value=time(hour=8, minute=15))
                     end_charge_time4 = st.time_input('end charge 4 :checkered_flag:',value=time(hour=17, minute=45))
                     SCALE_FUCTOR4_CHARGE=st.slider('EV4 charge multiplier',min_value=0.0,max_value=5.0,value=1.0,step=0.1)
-                    battery4=st.slider('Initial EV4 Battery:battery:',min_value=0.0,max_value=300000.0,value=100000.0,step=1000.0)
+                    battery4_per = st.slider(
+                        'Initial EV4 Battery :battery: %',
+                        min_value=0.0,
+                        max_value=100.0,
+                        value=30.0,
+                        step=1.0)
+                    battery4 =battery4_per / 100 * 300000
                     
 
 
@@ -685,8 +707,14 @@ if __name__ == '__main__':
      
      DAY = st.selectbox('Select Day :calendar:', list(days_mapping.keys()), format_func=lambda key: days_mapping[key])
 
-
-     MAXIMUM_CAR_CAPACITY=st.number_input('MaximumCarCapacity :battery:',min_value=0,max_value=300000,value=300000,step=10000,key="max_car_cap_input")
+     MAXIMUM_CAR_CAPACITY = st.number_input(
+                ':battery: Capacity in kWh',
+                min_value=0,
+                max_value=int(300000*0.00025),
+                value=int(300000*0.00025),
+                step=int(10000*0.00025),
+                key="max_car_cap_input"
+            ) / 0.00025
      st.sidebar.image('imgs/SaxionLogo.png',width=200)
      
      st.sidebar.markdown('**Designed By </br> Stelios Diamantopoulos**',unsafe_allow_html=True)

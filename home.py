@@ -88,11 +88,14 @@ def main():
         with c11:
             st.image(aardenhuizen_image,width=500)
         with c12:
-             st.markdown("""The Aardenhuizen community is a small region consisting of 24 households .</br>
+            st.markdown("""The Aardenhuizen community is a small region consisting of 24 households .</br>
                         The community has installed 327 solar panels to generate electricity and 4 electric vehicles (EVs) to promote sustainable transportation.</br>
                         The community members are committed to reducing their carbon footprint by adopting environmentally friendly practices. </br>
                         They prioritize the use of renewable energy sources, such as solar power, to minimize their reliance on non-renewable energy sources.</br>""",unsafe_allow_html=True)
-        
+            st.markdown('## 1_Analysis Tool to Analyze Different Scenarios_')
+            st.markdown('## 2_Check the DailyEVPlanner on the left sidebar_')
+            st.markdown('## 3_Check the PVGSIS fpr PV forcasting_')
+            
     c1,c2,c3 = st.columns([1,1,1])
     with c1:
         seasonal_pv = seasonal_pv_analysis(data)
@@ -106,8 +109,7 @@ def main():
         st.pyplot(average_demand_by_day(data))
             
         
-   
-    st.markdown('## _Check the DailyEVPlanner on the left sidebar_')
+    
 
 
 if __name__ == '__main__':
