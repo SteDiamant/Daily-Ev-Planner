@@ -105,8 +105,22 @@ def plot_pie_chart(labels, values):
     ax.set_aspect('equal')
     
     return fig
+def calculate_curtailed_energy(df):
+    sum_imbalance = 0
+    sum_imbalance1 = 0
+    sum_imbalance2 = 0
+    is_summing = False
 
+    for index, row in df.iterrows():
+        if row['PV (W)'] < 0:
+            is_summing = True
+            sum_imbalance += row['Imbalance (W)']
+            sum_imbalance1 += row['TotalImbalance']
+            sum_imbalance2 += row['PV (W)']
+        elif is_summing:
+            break  # Exit the loop if PV value becomes non-negative
 
+    return sum_imbalance*0.00025,sum_imbalance1*0.00025,sum_imbalance2*0.00025 #0.00025 is the multiplier from w/15min to kWh
 def main(data):
     c1,c2=st.columns([2,1])
     with c1:
@@ -120,18 +134,25 @@ def main(data):
         data1=calculate_energy_storage(data,4,[car1_init_charge,car2_init_charge,car3_init_charge,car4_init_charge])
         c11,c12=st.columns(2)
         with c11:
-            st.subheader("Battery Levels")
-            car1_battery_lvl1 = data1['BatteryLVL1'].tail(1)
-            car2_battery_lvl1 = data1['BatteryLVL2'].tail(1)
-            car3_battery_lvl1 = data1['BatteryLVL3'].tail(1)
-            car4_battery_lvl1 = data1['BatteryLVL4'].tail(1)
-            st.write(':battery:_1 = '+str(round(car1_battery_lvl1.values[0]/300000,2)*100)+'%')
-            st.write(':battery:_2 = '+str(round(car2_battery_lvl1.values[0]/300000,2)*100)+'%')
-            st.write(':battery:_3 = '+str(round(car3_battery_lvl1.values[0]/300000,2)*100)+'%')
-            st.write(':battery:_4 = '+str(round(car4_battery_lvl1.values[0]/300000,2)*100)+'%')
+            
+                st.subheader("Battery Levels")
+                car1_battery_lvl1 = data1['BatteryLVL1'].tail(1)
+                car2_battery_lvl1 = data1['BatteryLVL2'].tail(1)
+                car3_battery_lvl1 = data1['BatteryLVL3'].tail(1)
+                car4_battery_lvl1 = data1['BatteryLVL4'].tail(1)
+                st.write(':battery:_1 = '+str(round(car1_battery_lvl1.values[0]/300000,2)*100)+'%')
+                st.write(':battery:_2 = '+str(round(car2_battery_lvl1.values[0]/300000,2)*100)+'%')
+                st.write(':battery:_3 = '+str(round(car3_battery_lvl1.values[0]/300000,2)*100)+'%')
+                st.write(':battery:_4 = '+str(round(car4_battery_lvl1.values[0]/300000,2)*100)+'%')
+                st.subheader("Curtailed Energy")
+                initial_curtailed_energy,final_curtailed_energy,total_energy_produced=calculate_curtailed_energy(data1)
+                st.markdown("Total Energy Produced: "+str(-round(total_energy_produced,2))+" kWh")
+                st.markdown("Curtailed Energy Withoug EVs: "+str(-round(initial_curtailed_energy,2))+" kWh "+" or "+str(round((initial_curtailed_energy/total_energy_produced)*100,2))+"% of the total Energy Produced")
+                st.markdown("Curtailed Energy After Optimal Charging: "+str(-round(final_curtailed_energy,2))+" kWh "+' or '+str(round((final_curtailed_energy/total_energy_produced)*100,2))+"% of the total Energy Produced")
         with c12:
             st.subheader("Green Energy Penetration")
             good_energy_count,bad_energy_count,total_EV_demand_count,per_car_count_list=count_positive_charge_negative_imbalance(data)
+            st.markdown("Green Energy Penetration Rate: "+str(round((1-final_curtailed_energy/total_energy_produced)*100,2))+"%")
             st.pyplot(plot_pie_chart(["PVs","From Grid"],[good_energy_count,bad_energy_count]))
     with c2:
         st.subheader("Energy Supply vs 2H blackout")
