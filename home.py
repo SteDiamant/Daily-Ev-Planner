@@ -77,6 +77,19 @@ def average_demand_by_day(data):
     plt.show()
     
     return fig
+
+
+def find_top_10(dataframe, demand_column, time_column):
+    sorted_data = dataframe.sort_values(by=demand_column, ascending=False)
+    top_10_demand = sorted_data.head(10)
+    top_10_time = top_10_demand[time_column]
+    return top_10_time
+def find_last_10(dataframe, demand_column, time_column):
+    sorted_data = dataframe.sort_values(by=demand_column, ascending=True)
+    top_10_demand = sorted_data.head(10)
+    top_10_time = top_10_demand[time_column]
+    return top_10_time.unique()
+
 def main():
     data=pd.read_csv('data_original.csv')
     charging_image = Image.open('imgs/frontCover.png')
@@ -92,7 +105,16 @@ def main():
                         The community has installed 327 solar panels to generate electricity and 4 electric vehicles (EVs) to promote sustainable transportation.</br>
                         The community members are committed to reducing their carbon footprint by adopting environmentally friendly practices. </br>
                         They prioritize the use of renewable energy sources, such as solar power, to minimize their reliance on non-renewable energy sources.</br>""",unsafe_allow_html=True)
-            st.markdown('## 1_Analysis Tool to Analyze Different Scenarios_')
+            top_10_demand = find_top_10(data, 'General Demand (W)', 'Time')
+            top_10_production = find_last_10(data, 'PV (W)', 'Time')
+            with st.expander("Max Demand Days"):
+                # Iterate over the list of timestamps and display them
+                for timestamp in top_10_demand:
+                    st.write(f"{timestamp.split('/')[1]}/{timestamp.split('/')[0]}/2021")
+            with st.expander("Max Production Days"):
+                # Iterate over the list of timestamps and display them
+                for timestamp in top_10_production:
+                    st.write(f"{timestamp.split('/')[1]}/{timestamp.split('/')[0]}/2021")
             st.markdown('## 2_Check the DailyEVPlanner on the left sidebar_')
             st.markdown('## 3_Check the PVGSIS fpr PV forcasting_')
             
