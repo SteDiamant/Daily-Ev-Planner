@@ -117,8 +117,7 @@ def calculate_curtailed_energy(df):
             sum_imbalance += row['Imbalance (W)']
             sum_imbalance1 += row['TotalImbalance']
             sum_imbalance2 += row['PV (W)']
-        elif is_summing:
-            break  # Exit the loop if PV value becomes non-negative
+        
 
     return sum_imbalance*0.00025,sum_imbalance1*0.00025,sum_imbalance2*0.00025 #0.00025 is the multiplier from w/15min to kWh
 def main(data):
@@ -147,8 +146,12 @@ def main(data):
                 st.subheader("Curtailed Energy")
                 initial_curtailed_energy,final_curtailed_energy,total_energy_produced=calculate_curtailed_energy(data1)
                 st.markdown("Total Energy Produced: "+str(-round(total_energy_produced,2))+" kWh")
+                
                 st.markdown("Curtailed Energy Withoug EVs: "+str(-round(initial_curtailed_energy,2))+" kWh "+" or "+str(round((initial_curtailed_energy/total_energy_produced)*100,2))+"% of the total Energy Produced")
+                
                 st.markdown("Curtailed Energy After Optimal Charging: "+str(-round(final_curtailed_energy,2))+" kWh "+' or '+str(round((final_curtailed_energy/total_energy_produced)*100,2))+"% of the total Energy Produced")
+                
+                
         with c12:
             st.subheader("Green Energy Penetration")
             good_energy_count,bad_energy_count,total_EV_demand_count,per_car_count_list=count_positive_charge_negative_imbalance(data)
