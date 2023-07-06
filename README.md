@@ -142,7 +142,9 @@ For any given day in the calendar year the user can simulate the Charging and Di
 ![downloadCSV](imgs/downloadCSV.jpg)
 
 Dowload csv file is a feature where the user can download the corresponded dataset for any set of parameters at any given day . 
-
+### Analysis Dashboard
+The Analysis Dashboard is a feature in DailyEVPlanner that allows users to upload scenarios and receive calculations on various aspects. It provides information on the SOC at the end of the day, the impact of charge and discharge on the imbalance curve, and statistics on green energy penetration and curtailed energy. It helps users make informed decisions based on these insights.
+![analysisPage](imgs/analysis%20(1).jpg)
 ### PV production estimation PVGSIS
 
 Data is collected from PVGIS and Solcast for the duration (27-4-23 and 3-5-23)
