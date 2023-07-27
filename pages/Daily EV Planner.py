@@ -344,7 +344,7 @@ def plot_battery_level(df):
 
 
 def main():
-    
+    DAY=208
     days=ETL()
     day=days[DAY]
     with st.form("my_form"):
@@ -475,7 +475,7 @@ def main():
     with st.container():
         fig, ax = plt.subplots(figsize=(15,4))
         # Create a line plot
-        with st.expander('Plot :chart_with_upwards_trend:'):
+        with st.expander('Plot :chart_with_upwards_trend:',expanded=True):
             with st.form(key='plot'):
                 choices=st.multiselect('Select EV',['Total_EV_Charge (W)','EV1_charge (W)', 'EV2_charge (W)', 'EV3_charge (W)', 'EV4_charge (W)', 
                                             'Total_EV_DisCharge (W)','EV1_discharge (W)', 'EV2_discharge (W)', 'EV3_discharge (W)', 'EV4_discharge (W)', 
@@ -484,6 +484,8 @@ def main():
                                             'PV (W)', 'Total_Imbalance (W)', 'Imbalance (W)'])
                 submitted = st.form_submit_button("Submit")
             unique_df['Total_Imbalance (W)']=unique_df['Imbalance (W)']+unique_df['Total_EV_Charge (W)']+unique_df['Total_EV_DisCharge (W)']
+            st.markdown('**Imbalance = Demand - Production**')
+            st.markdown('**Total Imbalance = Demand - Production + EV_Impact**')
             sns.lineplot(data=unique_df[choices],
                                         palette=['#000b5e','#021496','#0119cb','#001be7','#001eff',
                                                 '#ff0000','#ff7100','#ffa900','#ffcb00','#fff800',  
@@ -496,7 +498,7 @@ def main():
             plt.legend(loc='lower left',fontsize='x-small')
             st.pyplot(fig)
     with st.container():
-        with st.expander('Daily Energy Exchange Analysis :clipboard:'):
+        with st.expander('Fleet Energy Exchange :clipboard:'):
             col1,col2,col3=st.columns([2,1,0.9])
             with col1:
                 fig1, ax1 = plt.subplots()
@@ -694,7 +696,7 @@ if __name__ == '__main__':
      sns.set(style="darkgrid")
      st. set_page_config(layout="wide")
      st.title('EV Charging and Discharging Planner for a day')
-
+     
      days_mapping = {}
      day_index = 0
      for day in range(1, 323):
@@ -705,7 +707,8 @@ if __name__ == '__main__':
         days_mapping[day] = formatted_date
 
      
-     DAY = st.selectbox('Select Day :calendar:', list(days_mapping.keys()), format_func=lambda key: days_mapping[key])
+     DAY = st.selectbox('Select Day :calendar:', list(days_mapping.keys()), format_func=lambda key: days_mapping[key], index=208)
+
 
      MAXIMUM_CAR_CAPACITY = st.number_input(
                 ':battery: Capacity in kWh',
