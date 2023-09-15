@@ -44,7 +44,7 @@ To use the EV Charging and Discharging Controller, you have two options:
 
 1. Clone the repository and install the application on your local machine. Follow the installation instructions to run the app on your local network.
 2. Access the online version hosted on Streamlit Cloud by going to the following link: <br> 
-https://stediamant-daily-ev-planner-home-8x8irb.streamlit.app/
+[https://stediamant-daily-ev-planner-home-8x8irb.streamlit.app/](https://stediamant.streamlit.app/EV_Simulator)
 
 
 
