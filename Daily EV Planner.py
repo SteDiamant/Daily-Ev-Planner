@@ -1,18 +1,19 @@
 import pandas as pd
 import numpy as np
-from datetime import time, timedelta, datetime
+from datetime import time, timedelta, datetime, date
 import matplotlib.pyplot as plt
 import streamlit as st
 import seaborn as sns
 from html2markdown import convert
 import calendar
 import sqlite3
+from typing import List, Tuple
 
-def split_dataframe_by_day(df):
+def split_dataframe_by_day(df: pd.DataFrame) -> List[pd.DataFrame]:
     days = [df[i : i + 96] for i in range(0, len(df), 96)]
     return days
 
-def read_from_db():
+def read_from_db() -> pd.DataFrame:
     conn = sqlite3.connect('/Users/steliosdiamantopoulos/Desktop/deployments/DailyEVPlanner/streamlitProject/energy_data.db')
 
     # Read the entire table into a Pandas DataFrame
@@ -22,7 +23,7 @@ def read_from_db():
     conn.close()
     return df
 
-def ETL():
+def ETL() -> List[pd.DataFrame]:
     """
     Extracts, transforms, and loads data from a database to the app.
 
@@ -87,7 +88,7 @@ class HtmlGenerator:
         ------
         ValueError
             If the battery capacity is more than 100% or less than 0%."""
-
+    @staticmethod
     def battery_lvl1(id, value):
 
         # Calculate the percentage of battery charge
@@ -189,9 +190,9 @@ class ProfileGenerator:
         Generates a discharge profile for an EV within a specified time range.
     """
 
-    def crete_charge_profile(
-        df, start_time, end_time, start_date, end_date, id, scale_factor, initial_charge
-    ):
+    @staticmethod
+    def crete_charge_profile(df: pd.DataFrame, start_time: time, end_time: time, start_date: date, end_date: date,
+                              id: int, scale_factor: float, initial_charge: float) -> pd.DataFrame:
         """
         Generates a charge profile for an EV within a specified time range.
 
@@ -243,8 +244,8 @@ class ProfileGenerator:
         return charge_profile
      
     def crete_discharge_profile(
-        df, start_time, end_time, start_date, end_date, id, scale_factor
-    ):
+       df: pd.DataFrame, start_time: time, end_time: time, start_date: date, end_date: date,
+                                 id: int, scale_factor: float) -> pd.DataFrame:
         """
         Generates a discharge profile for an EV within a specified time range.
 
@@ -306,7 +307,7 @@ class MergeProfiles:
         Merges the given dataframe with the discharge profile dataframe and calculates the total EV discharge and total imbalance.
     """
 
-    def merge_charge_profile(df, charge_profile):
+    def merge_charge_profile(df: pd.DataFrame, charge_profile: pd.DataFrame) -> pd.DataFrame:
         """
         Merges the given dataframe with the charge profile dataframe and calculates the total EV charge and total imbalance.
 
@@ -340,7 +341,7 @@ class MergeProfiles:
         )
         return merged_df
 
-    def merge_discharge_profile(df, discharge_profile):
+    def merge_discharge_profile(df: pd.DataFrame, discharge_profile: pd.DataFrame) -> pd.DataFrame:
         """
         Merges the given dataframe with the discharge profile dataframe and calculates the total EV discharge and total imbalance.
 
@@ -380,8 +381,12 @@ class MergeProfiles:
 
 
 def create_day_charge_profile(
-    day, start_charge_times, end_charge_times, SCALE_FACTORS_CHARGE, initial_charge
-):
+    day: pd.DataFrame, 
+    start_charge_times: List[time], 
+    end_charge_times: List[time], 
+    SCALE_FACTORS_CHARGE: List[float], 
+    initial_charge: List[float]
+) -> pd.DataFrame:
     """
     Create a daily charge profile for multiple electric vehicles (EVs).
 
@@ -401,7 +406,7 @@ def create_day_charge_profile(
     )  # use index 0 to get the first (and only) element
     __get__day = int(day["DayOfMonth"].unique()[0])
 
-    # Create start and end datetime obkects
+    # Create start and end datetime objects
     start_date = datetime(year=2021, month=__get__month, day=__get__day)
     end_date = start_date  # set end date equal to start date
 
@@ -459,9 +464,11 @@ def create_day_charge_profile(
 
 
 def create_day_discharge_profile(
-    
-    day, start_charge_times, end_charge_times, SCALE_FACTORS_DISCHARGE
-):
+    day: pd.DataFrame, 
+    start_charge_times: List[time], 
+    end_charge_times: List[time], 
+    SCALE_FACTORS_DISCHARGE: List[float]
+) -> pd.DataFrame:
     """
     Creates a daily discharge profile for electric vehicles (EVs) based on the provided data.
 
@@ -480,11 +487,11 @@ def create_day_discharge_profile(
     )  # use index 0 to get the first (and only) element
     __get__day = int(day["DayOfMonth"].unique()[0])
 
-    # Create start and end datetime obkects
+    # Create start and end datetime objects
     start_date = datetime(year=2021, month=__get__month, day=__get__day)
     end_date = start_date  # set end date equal to start date
 
-    # Create charge profiles for all four EVs
+    # Create discharge profiles for all four EVs
     ev1 = ProfileGenerator.crete_discharge_profile(
         day,
         start_charge_times[0],
@@ -522,18 +529,18 @@ def create_day_discharge_profile(
         scale_factor=SCALE_FACTORS_DISCHARGE[3],
     )
 
-    # Merge the charge profiles into a single dataframe
-    charge_data = pd.concat([ev1, ev2, ev3, ev4], axis=1)
-    charge_data.reset_index(inplace=True)
-    charge_data.fillna(0, inplace=True)
+    # Merge the discharge profiles into a single dataframe
+    discharge_data = pd.concat([ev1, ev2, ev3, ev4], axis=1)
+    discharge_data.reset_index(inplace=True)
+    discharge_data.fillna(0, inplace=True)
 
-    # Merge the charge profile with the original dataframe
-    merged_df = MergeProfiles.merge_discharge_profile(day, charge_data)
+    # Merge the discharge profile with the original dataframe
+    merged_df = MergeProfiles.merge_discharge_profile(day, discharge_data)
 
     return merged_df
 
 
-def calculateTotalEnergy_EV_Charge(df):
+def calculateTotalEnergy_EV_Charge(df: pd.DataFrame) -> Tuple[float, List[float]]:
     """
     Calculate the total energy consumed by EV charges.
 
@@ -566,7 +573,7 @@ def calculateTotalEnergy_EV_Charge(df):
     ]
 
 
-def calculateTotalEnergy_EV_DisCharge(df):
+def calculateTotalEnergy_EV_DisCharge(df: pd.DataFrame) -> Tuple[float, List[float]]:
     """
     Calculate the total energy discharged by electric vehicles (EVs) and the individual discharges.
 
@@ -593,7 +600,7 @@ def calculateTotalEnergy_EV_DisCharge(df):
     ]
 
 
-def count_positive_charge_negative_imbalance(df):
+def count_positive_charge_negative_imbalance(df: pd.DataFrame) -> Tuple[int, int, int, List[int]]:
     """
     Counts the number of instances where electric vehicle (EV) charging power is positive 
     and the total imbalance is either negative or positive. Also provides a breakdown of 
@@ -705,7 +712,7 @@ def convert_df(df):
 #         file.close()
 
 
-def plot_pie_chart(labels, values):
+def plot_pie_chart(labels: List[str], values: List[float]) -> plt.Figure:
     """
     Plots a pie chart showing the percentage distribution of energy origins used for charging EVs.
 
@@ -717,7 +724,7 @@ def plot_pie_chart(labels, values):
     matplotlib.figure.Figure: The matplotlib figure object containing the pie chart.
     """
     fig, ax = plt.subplots()
-    plt.title("Energy Origin Perchentage \n used for charging EVs")
+    plt.title("Energy Origin Percentage \n used for charging EVs")
     ax.pie(values, labels=labels, autopct="%1.1f%%", colors=("g", "r"))
 
     ax.set_aspect("equal")
@@ -725,7 +732,7 @@ def plot_pie_chart(labels, values):
     return fig
 
 
-def calculate_energy_storage(df, MAX_CO_CARS, STARTING_CAR_CAPACITY):
+def calculate_energy_storage(df: pd.DataFrame, MAX_CO_CARS: int, STARTING_CAR_CAPACITY: List[float]) -> pd.DataFrame:
     """
     Calculate the energy storage for a fleet of electric vehicles over time.
 
@@ -772,7 +779,7 @@ def calculate_energy_storage(df, MAX_CO_CARS, STARTING_CAR_CAPACITY):
 
 
 @st.cache_data
-def plot_battery_level(df):
+def plot_battery_level(df: pd.DataFrame) -> None:
     """
     Plots the battery level of electric vehicles over time.
 
