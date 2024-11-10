@@ -9,12 +9,16 @@ import calendar
 import sqlite3
 from typing import List, Tuple
 
+
 def split_dataframe_by_day(df: pd.DataFrame) -> List[pd.DataFrame]:
     days = [df[i : i + 96] for i in range(0, len(df), 96)]
     return days
 
+
 def read_from_db() -> pd.DataFrame:
-    conn = sqlite3.connect('/Users/steliosdiamantopoulos/Desktop/deployments/DailyEVPlanner/streamlitProject/energy_data.db')
+    conn = sqlite3.connect(
+        "/Users/steliosdiamantopoulos/Desktop/deployments/DailyEVPlanner/streamlitProject/energy_data.db"
+    )
 
     # Read the entire table into a Pandas DataFrame
     df = pd.read_sql_query("SELECT * FROM EnergyDemand", conn)
@@ -22,6 +26,7 @@ def read_from_db() -> pd.DataFrame:
     # Close the database connection
     conn.close()
     return df
+
 
 def ETL() -> List[pd.DataFrame]:
     """
@@ -88,6 +93,7 @@ class HtmlGenerator:
         ------
         ValueError
             If the battery capacity is more than 100% or less than 0%."""
+
     @staticmethod
     def battery_lvl1(id, value):
 
@@ -191,8 +197,16 @@ class ProfileGenerator:
     """
 
     @staticmethod
-    def crete_charge_profile(df: pd.DataFrame, start_time: time, end_time: time, start_date: date, end_date: date,
-                              id: int, scale_factor: float, initial_charge: float) -> pd.DataFrame:
+    def crete_charge_profile(
+        df: pd.DataFrame,
+        start_time: time,
+        end_time: time,
+        start_date: date,
+        end_date: date,
+        id: int,
+        scale_factor: float,
+        initial_charge: float,
+    ) -> pd.DataFrame:
         """
         Generates a charge profile for an EV within a specified time range.
 
@@ -242,10 +256,16 @@ class ProfileGenerator:
         charge_profile.index.name = "Time"
 
         return charge_profile
-     
+
     def crete_discharge_profile(
-       df: pd.DataFrame, start_time: time, end_time: time, start_date: date, end_date: date,
-                                 id: int, scale_factor: float) -> pd.DataFrame:
+        df: pd.DataFrame,
+        start_time: time,
+        end_time: time,
+        start_date: date,
+        end_date: date,
+        id: int,
+        scale_factor: float,
+    ) -> pd.DataFrame:
         """
         Generates a discharge profile for an EV within a specified time range.
 
@@ -307,7 +327,9 @@ class MergeProfiles:
         Merges the given dataframe with the discharge profile dataframe and calculates the total EV discharge and total imbalance.
     """
 
-    def merge_charge_profile(df: pd.DataFrame, charge_profile: pd.DataFrame) -> pd.DataFrame:
+    def merge_charge_profile(
+        df: pd.DataFrame, charge_profile: pd.DataFrame
+    ) -> pd.DataFrame:
         """
         Merges the given dataframe with the charge profile dataframe and calculates the total EV charge and total imbalance.
 
@@ -341,7 +363,9 @@ class MergeProfiles:
         )
         return merged_df
 
-    def merge_discharge_profile(df: pd.DataFrame, discharge_profile: pd.DataFrame) -> pd.DataFrame:
+    def merge_discharge_profile(
+        df: pd.DataFrame, discharge_profile: pd.DataFrame
+    ) -> pd.DataFrame:
         """
         Merges the given dataframe with the discharge profile dataframe and calculates the total EV discharge and total imbalance.
 
@@ -381,11 +405,11 @@ class MergeProfiles:
 
 
 def create_day_charge_profile(
-    day: pd.DataFrame, 
-    start_charge_times: List[time], 
-    end_charge_times: List[time], 
-    SCALE_FACTORS_CHARGE: List[float], 
-    initial_charge: List[float]
+    day: pd.DataFrame,
+    start_charge_times: List[time],
+    end_charge_times: List[time],
+    SCALE_FACTORS_CHARGE: List[float],
+    initial_charge: List[float],
 ) -> pd.DataFrame:
     """
     Create a daily charge profile for multiple electric vehicles (EVs).
@@ -464,10 +488,10 @@ def create_day_charge_profile(
 
 
 def create_day_discharge_profile(
-    day: pd.DataFrame, 
-    start_charge_times: List[time], 
-    end_charge_times: List[time], 
-    SCALE_FACTORS_DISCHARGE: List[float]
+    day: pd.DataFrame,
+    start_charge_times: List[time],
+    end_charge_times: List[time],
+    SCALE_FACTORS_DISCHARGE: List[float],
 ) -> pd.DataFrame:
     """
     Creates a daily discharge profile for electric vehicles (EVs) based on the provided data.
@@ -578,8 +602,8 @@ def calculateTotalEnergy_EV_DisCharge(df: pd.DataFrame) -> Tuple[float, List[flo
     Calculate the total energy discharged by electric vehicles (EVs) and the individual discharges.
 
     Args:
-        df (pandas.DataFrame): DataFrame containing discharge data for EVs. 
-                               Expected columns are "EV1_discharge (W)", "EV2_discharge (W)", 
+        df (pandas.DataFrame): DataFrame containing discharge data for EVs.
+                               Expected columns are "EV1_discharge (W)", "EV2_discharge (W)",
                                "EV3_discharge (W)", and "EV4_discharge (W)".
 
     Returns:
@@ -600,10 +624,12 @@ def calculateTotalEnergy_EV_DisCharge(df: pd.DataFrame) -> Tuple[float, List[flo
     ]
 
 
-def count_positive_charge_negative_imbalance(df: pd.DataFrame) -> Tuple[int, int, int, List[int]]:
+def count_positive_charge_negative_imbalance(
+    df: pd.DataFrame,
+) -> Tuple[int, int, int, List[int]]:
     """
-    Counts the number of instances where electric vehicle (EV) charging power is positive 
-    and the total imbalance is either negative or positive. Also provides a breakdown of 
+    Counts the number of instances where electric vehicle (EV) charging power is positive
+    and the total imbalance is either negative or positive. Also provides a breakdown of
     these counts for each EV.
 
     Parameters:
@@ -616,13 +642,13 @@ def count_positive_charge_negative_imbalance(df: pd.DataFrame) -> Tuple[int, int
 
     Returns:
     tuple: A tuple containing:
-        - count (int): Total count of instances where any EV charging power is positive 
+        - count (int): Total count of instances where any EV charging power is positive
           and the total imbalance is less than or equal to zero.
-        - count1 (int): Total count of instances where any EV charging power is positive 
+        - count1 (int): Total count of instances where any EV charging power is positive
           and the total imbalance is greater than or equal to zero.
-        - total_count (int): Total count of instances where the total imbalance is greater 
+        - total_count (int): Total count of instances where the total imbalance is greater
           than zero.
-        - list: A list of counts for each EV where the charging power is positive and the 
+        - list: A list of counts for each EV where the charging power is positive and the
           total imbalance is less than zero.
     """
     count = 0
@@ -732,7 +758,9 @@ def plot_pie_chart(labels: List[str], values: List[float]) -> plt.Figure:
     return fig
 
 
-def calculate_energy_storage(df: pd.DataFrame, MAX_CO_CARS: int, STARTING_CAR_CAPACITY: List[float]) -> pd.DataFrame:
+def calculate_energy_storage(
+    df: pd.DataFrame, MAX_CO_CARS: int, STARTING_CAR_CAPACITY: List[float]
+) -> pd.DataFrame:
     """
     Calculate the energy storage for a fleet of electric vehicles over time.
 
@@ -783,12 +811,12 @@ def plot_battery_level(df: pd.DataFrame) -> None:
     """
     Plots the battery level of electric vehicles over time.
 
-    This function creates a plot with four subplots, each representing the battery level of an electric vehicle (EV) over time. 
+    This function creates a plot with four subplots, each representing the battery level of an electric vehicle (EV) over time.
     The battery levels are plotted as stack plots, and horizontal lines indicating maximum capacity, 80% capacity, 20% capacity, and minimum capacity are added to each subplot.
 
     Args:
-        df (pd.DataFrame): A DataFrame containing the battery level data for the electric vehicles. 
-        The DataFrame should have columns named 'BatteryLVL1', 'BatteryLVL2', 'BatteryLVL3', and 'BatteryLVL4', representing the battery levels of four EVs, 
+        df (pd.DataFrame): A DataFrame containing the battery level data for the electric vehicles.
+        The DataFrame should have columns named 'BatteryLVL1', 'BatteryLVL2', 'BatteryLVL3', and 'BatteryLVL4', representing the battery levels of four EVs,
         and an index representing the time.
 
     Returns:
@@ -1605,7 +1633,6 @@ if __name__ == "__main__":
             day_index = 1
         formatted_date = f"{day_index}/{calendar.month_abbr[(day - 1) // 27 + 1]}"
         days_mapping[day] = formatted_date
-
 
     MAXIMUM_CAR_CAPACITY = (
         st.number_input(
