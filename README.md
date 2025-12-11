@@ -17,13 +17,13 @@ The 'Daily Ev Planner' is a software tool that allows users to manage the chargi
 1. Clone the repository to your local machine using the following command:
     
     ```bash
-    git clone https://github.com/SteDiamant/streamlitProject
+    git clone https://github.com/SteDiamant/Daily-Ev-Planner
     ```
     
 2. Navigate to the project directory:
     
     ```bash
-    cd streamlitProject
+    cd Daily-Ev-Planner
     ```
     
 3. Install the required Python packages using pip:
@@ -35,7 +35,13 @@ The 'Daily Ev Planner' is a software tool that allows users to manage the chargi
 4. Run the application using Streamlit:
     
     ```python
-    streamlit run app.py
+    streamlit run "Daily EV Planner.py"
+    ```
+
+   > Optionally, set a custom SQLite path (defaults to `energy_data.db` in the repo root):
+
+    ```bash
+    export ENERGY_DB_PATH=/path/to/energy_data.db
     ```
 
 ## Usage
