@@ -1,8 +1,13 @@
 import sqlite3
 import csv
+import os
+from pathlib import Path
+
+default_db_path = Path(__file__).resolve().parent / "energy_data.db"
+db_path = Path(os.getenv("ENERGY_DB_PATH", default_db_path))
 
 # Connect to SQLite database (or create it if it doesn't exist)
-conn = sqlite3.connect("energy_data.db")
+conn = sqlite3.connect(str(db_path))
 cursor = conn.cursor()
 
 # Create the table with column names in double quotes
@@ -19,10 +24,10 @@ cursor.execute(
 )
 
 # Open the CSV file and read the data
-with open(
-    "/Users/steliosdiamantopoulos/Desktop/deployments/DailyEVPlanner/streamlitProject/data_original.csv",
-    "r",
-) as file:
+default_csv_path = Path(__file__).resolve().parent / "data_original.csv"
+csv_path = Path(os.getenv("ENERGY_SOURCE_CSV", default_csv_path))
+
+with open(csv_path, "r") as file:
     csv_reader = csv.reader(file)
     next(csv_reader)  # Skip the header row
 

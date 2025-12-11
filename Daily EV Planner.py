@@ -8,6 +8,8 @@ from html2markdown import convert
 import calendar
 import sqlite3
 from typing import List, Tuple
+import os
+from pathlib import Path
 
 
 def split_dataframe_by_day(df: pd.DataFrame) -> List[pd.DataFrame]:
@@ -16,9 +18,10 @@ def split_dataframe_by_day(df: pd.DataFrame) -> List[pd.DataFrame]:
 
 
 def read_from_db() -> pd.DataFrame:
-    conn = sqlite3.connect(
-        "/Users/steliosdiamantopoulos/Desktop/deployments/DailyEVPlanner/streamlitProject/energy_data.db"
-    )
+    default_db_path = Path(__file__).resolve().parent / "energy_data.db"
+    db_path = Path(os.getenv("ENERGY_DB_PATH", default_db_path))
+
+    conn = sqlite3.connect(str(db_path))
 
     # Read the entire table into a Pandas DataFrame
     df = pd.read_sql_query("SELECT * FROM EnergyDemand", conn)
